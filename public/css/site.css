@@ -122,6 +122,15 @@ h1 {
   color: var(--ink);
 }
 
+.facts {
+  margin: 1.4rem 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--muted);
+  display: grid;
+  gap: 0.4rem;
+}
+
 .section-head {
   display: flex;
   flex-direction: column;
