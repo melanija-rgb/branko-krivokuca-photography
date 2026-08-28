@@ -136,9 +136,7 @@ async function loadInquiries() {
 }
 
 async function loadPhotos() {
-  const photos = await fetch("/api/photos")
-    .then((res) => res.json())
-    .catch(() => []);
+  const photos = await fetchPhotoList();
   if (!Array.isArray(photos)) return;
   const groups = [
     { id: "landscape", label: "Landscape" },
@@ -155,6 +153,21 @@ async function loadPhotos() {
       return `<div class="admin-series"><h3>${label}</h3>${body}</div>`;
     })
     .join("");
+}
+
+async function fetchPhotoList() {
+  const sources = ["/api/photos", "/photos.json"];
+  for (const url of sources) {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) continue;
+      const data = await response.json();
+      if (Array.isArray(data)) return data;
+    } catch {
+      /* try the next source */
+    }
+  }
+  return [];
 }
 
 function photoFigure(photo) {
