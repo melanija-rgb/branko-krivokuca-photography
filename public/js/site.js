@@ -10,6 +10,23 @@ const series = [
 
 loadGallery();
 
+const header = document.querySelector(".site-header");
+const menuToggle = document.querySelector(".menu-toggle");
+const siteNav = document.querySelector("#site-nav");
+
+menuToggle.addEventListener("click", () => {
+  const open = header.classList.toggle("is-open");
+  menuToggle.setAttribute("aria-expanded", String(open));
+  menuToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+});
+
+siteNav.addEventListener("click", (event) => {
+  if (!event.target.closest("a")) return;
+  header.classList.remove("is-open");
+  menuToggle.setAttribute("aria-expanded", "false");
+  menuToggle.setAttribute("aria-label", "Open menu");
+});
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   statusEl.classList.remove("error");
