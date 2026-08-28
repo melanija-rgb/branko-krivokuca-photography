@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Branko Krivokuca — Photographer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/site.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="wordmark" href="#top">Branko Krivokuca</a>
+      <nav>
+        <a href="#landscape">Landscape</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#portraits">Portraits</a>
+        <a href="#social">Social</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="intro">
+        <p class="eyebrow">Photographer</p>
+        <h1>Landscape and nature photographer.</h1>
+        <p class="roles">Climber · Mountaineer</p>
+        <p class="lede">Prints available. Work is shown in three series below.</p>
+      </section>
+
+      <section id="landscape" class="series" data-category="landscape">
+        <div class="section-head">
+          <p class="eyebrow">Series</p>
+          <h2>Landscape</h2>
+        </div>
+        <div class="gallery" aria-live="polite"></div>
+      </section>
+
+      <section id="architecture" class="series" data-category="architecture">
+        <div class="section-head">
+          <p class="eyebrow">Series</p>
+          <h2>Architecture</h2>
+        </div>
+        <div class="gallery" aria-live="polite"></div>
+      </section>
+
+      <section id="portraits" class="series" data-category="portraits">
+        <div class="section-head">
+          <p class="eyebrow">Series</p>
+          <h2>Portraits</h2>
+        </div>
+        <div class="gallery" aria-live="polite"></div>
+      </section>
+
+      <section id="social" class="social">
+        <div class="section-head">
+          <p class="eyebrow">Connect</p>
+          <h2>Social media</h2>
+        </div>
+        <div class="instagram-links">
+          <a
+            href="https://www.instagram.com/branko_krivokuca/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.6" />
+              <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.6" />
+              <circle cx="17.4" cy="6.6" r="1.15" fill="currentColor" />
+            </svg>
+            <span>@branko_krivokuca</span>
+          </a>
+          <a
+            href="https://www.instagram.com/__fokusiran__/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.6" />
+              <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.6" />
+              <circle cx="17.4" cy="6.6" r="1.15" fill="currentColor" />
+            </svg>
+            <span>@__fokusiran__</span>
+          </a>
+        </div>
+      </section>
+
+      <section id="contact" class="contact">
+        <div class="section-head">
+          <h2>Contact</h2>
+          <p>
+            If you would like to book a session, order a print, or discuss a
+            project, write to Branko here.
+          </p>
+        </div>
+
+        <form
+          id="contact-form"
+          class="contact-form"
+          name="contact"
+          method="POST"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+        >
+          <input type="hidden" name="form-name" value="contact" />
+          <p class="honeypot">
+            <label>Don’t fill this <input name="bot-field" /></label>
+          </p>
+          <div class="row">
+            <label>
+              First name
+              <input type="text" name="firstName" autocomplete="given-name" required maxlength="60" />
+            </label>
+            <label>
+              Last name
+              <input type="text" name="lastName" autocomplete="family-name" required maxlength="60" />
+            </label>
+          </div>
+          <label>
+            Email
+            <input type="email" name="email" autocomplete="email" required />
+          </label>
+          <label>
+            What would you like?
+            <textarea name="message" rows="6" required maxlength="4000" placeholder="Tell Branko about the service or project you have in mind."></textarea>
+          </label>
+          <button type="submit">Send message</button>
+          <p id="form-status" class="form-status" role="status"></p>
+        </form>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>© Branko Krivokuca</p>
+      <div class="footer-social">
+        <a href="https://www.instagram.com/branko_krivokuca/" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://www.instagram.com/__fokusiran__/" target="_blank" rel="noopener noreferrer">@__fokusiran__</a>
+      </div>
+    </footer>
+
+    <dialog id="lightbox" class="lightbox">
+      <img alt="" />
+      <form method="dialog"><button type="submit" aria-label="Close">Close</button></form>
+    </dialog>
+
+    <script src="/js/site.js"></script>
+  </body>
+</html>

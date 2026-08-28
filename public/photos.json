@@ -1,0 +1,218 @@
+[
+  {
+    "id": "landscape-milky-way",
+    "title": "Milky Way",
+    "category": "landscape",
+    "src": "/images/landscape-milky-way.png"
+  },
+  {
+    "id": "landscape-stecak",
+    "title": "Stecak",
+    "category": "landscape",
+    "src": "/images/landscape-stecak.png"
+  },
+  {
+    "id": "landscape-lightning",
+    "title": "Lightning",
+    "category": "landscape",
+    "src": "/images/landscape-lightning.png"
+  },
+  {
+    "id": "landscape-snow",
+    "title": "Snow ridge",
+    "category": "landscape",
+    "src": "/images/landscape-snow.png"
+  },
+  {
+    "id": "landscape-sunset",
+    "title": "Sunset",
+    "category": "landscape",
+    "src": "/images/landscape-sunset.png"
+  },
+  {
+    "id": "landscape-canyon",
+    "title": "Canyon",
+    "category": "landscape",
+    "src": "/images/landscape-canyon.png"
+  },
+  {
+    "id": "landscape-bridge",
+    "title": "Bridge",
+    "category": "landscape",
+    "src": "/images/landscape-bridge.png"
+  },
+  {
+    "id": "landscape-jajce",
+    "title": "Jajce",
+    "category": "landscape",
+    "src": "/images/landscape-jajce.png"
+  },
+  {
+    "id": "landscape-una",
+    "title": "Una",
+    "category": "landscape",
+    "src": "/images/landscape-una.png"
+  },
+  {
+    "id": "landscape-blagaj",
+    "title": "Blagaj",
+    "category": "landscape",
+    "src": "/images/landscape-blagaj.jpg"
+  },
+  {
+    "id": "landscape-pyramids",
+    "title": "Pyramids",
+    "category": "landscape",
+    "src": "/images/landscape-pyramids.png"
+  },
+  {
+    "id": "landscape-meadow",
+    "title": "Meadow",
+    "category": "landscape",
+    "src": "/images/landscape-meadow.png"
+  },
+  {
+    "id": "landscape-flowers",
+    "title": "Flowers",
+    "category": "landscape",
+    "src": "/images/landscape-flowers.jpg"
+  },
+  {
+    "id": "landscape-eagle",
+    "title": "Eagle",
+    "category": "landscape",
+    "src": "/images/landscape-eagle.png"
+  },
+  {
+    "id": "landscape-mallard",
+    "title": "Mallard",
+    "category": "landscape",
+    "src": "/images/landscape-mallard.jpg"
+  },
+  {
+    "id": "landscape-deer",
+    "title": "Deer",
+    "category": "landscape",
+    "src": "/images/landscape-deer.png"
+  },
+  {
+    "id": "landscape-moon-close",
+    "title": "Moon close",
+    "category": "landscape",
+    "src": "/images/landscape-moon-close.png"
+  },
+  {
+    "id": "landscape-climber",
+    "title": "Climber",
+    "category": "landscape",
+    "src": "/images/landscape-climber.png"
+  },
+  {
+    "id": "arch-kalemegdan",
+    "title": "Kalemegdan",
+    "category": "architecture",
+    "src": "/images/arch-kalemegdan.png"
+  },
+  {
+    "id": "arch-church-bw",
+    "title": "Church",
+    "category": "architecture",
+    "src": "/images/arch-church-bw.png"
+  },
+  {
+    "id": "arch-monastery-dusk",
+    "title": "Monastery dusk",
+    "category": "architecture",
+    "src": "/images/arch-monastery-dusk.jpg"
+  },
+  {
+    "id": "arch-church-arch",
+    "title": "Church arch",
+    "category": "architecture",
+    "src": "/images/arch-church-arch.png"
+  },
+  {
+    "id": "arch-church-blossoms",
+    "title": "Church blossoms",
+    "category": "architecture",
+    "src": "/images/arch-church-blossoms.png"
+  },
+  {
+    "id": "arch-memorial-cross",
+    "title": "Memorial",
+    "category": "architecture",
+    "src": "/images/arch-memorial-cross.png"
+  },
+  {
+    "id": "arch-fortress-night",
+    "title": "Fortress night",
+    "category": "architecture",
+    "src": "/images/arch-fortress-night.png"
+  },
+  {
+    "id": "arch-monastery-forest",
+    "title": "Monastery forest",
+    "category": "architecture",
+    "src": "/images/arch-monastery-forest.png"
+  },
+  {
+    "id": "arch-castle-ruin",
+    "title": "Castle ruin",
+    "category": "architecture",
+    "src": "/images/arch-castle-ruin.png"
+  },
+  {
+    "id": "arch-monastery-bands",
+    "title": "Monastery",
+    "category": "architecture",
+    "src": "/images/arch-monastery-bands.jpg"
+  },
+  {
+    "id": "portrait-daisy",
+    "title": "Portrait",
+    "category": "portraits",
+    "src": "/images/portrait-daisy.png"
+  },
+  {
+    "id": "portrait-fan",
+    "title": "Portrait",
+    "category": "portraits",
+    "src": "/images/portrait-fan.png"
+  },
+  {
+    "id": "portrait-sunflower",
+    "title": "Portrait",
+    "category": "portraits",
+    "src": "/images/portrait-sunflower.png"
+  },
+  {
+    "id": "portrait-eyes-bw",
+    "title": "Portrait",
+    "category": "portraits",
+    "src": "/images/portrait-eyes-bw.png"
+  },
+  {
+    "id": "portrait-fans-poppies",
+    "title": "Portrait",
+    "category": "portraits",
+    "src": "/images/portrait-fans-poppies.png"
+  },
+  {
+    "id": "portrait-moss",
+    "title": "Portrait",
+    "category": "portraits",
+    "src": "/images/portrait-moss.jpg"
+  },
+  {
+    "id": "portrait-meadow",
+    "title": "Portrait",
+    "category": "portraits",
+    "src": "/images/portrait-meadow.jpg"
+  },
+  {
+    "id": "portrait-blue-liner",
+    "title": "Portrait",
+    "category": "portraits",
+    "src": "/images/portrait-blue-liner.jpg"
+  }
+]

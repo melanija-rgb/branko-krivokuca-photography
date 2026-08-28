@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Studio — Branko Krivokuca</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/admin.css" />
+  </head>
+  <body>
+    <div id="login-view" class="login-view">
+      <div class="login-card">
+        <p class="eyebrow">Private studio</p>
+        <h1>Branko Krivokuca</h1>
+        <form id="login-form">
+          <label>
+            Password
+            <input type="password" name="password" autocomplete="current-password" required />
+          </label>
+          <button type="submit">Enter</button>
+          <p id="login-status" class="status" role="status"></p>
+        </form>
+      </div>
+    </div>
+
+    <div id="studio-view" class="studio-view" hidden>
+      <header class="admin-header">
+        <a class="wordmark" href="/">Branko Krivokuca</a>
+        <div class="header-actions">
+          <span>Studio</span>
+          <button type="button" id="logout">Sign out</button>
+        </div>
+      </header>
+
+      <main class="admin-main">
+        <section>
+          <div class="section-head">
+            <h2>Messages</h2>
+            <p>Inquiries from the contact form.</p>
+          </div>
+          <div id="inbox" class="inbox"></div>
+        </section>
+
+        <section>
+          <div class="section-head">
+            <h2>Gallery</h2>
+            <p>Upload into Landscape, Architecture, or Portraits.</p>
+          </div>
+          <form id="upload-form" class="upload-form">
+            <label>
+              Series
+              <select name="category" required>
+                <option value="landscape">Landscape</option>
+                <option value="architecture">Architecture</option>
+                <option value="portraits">Portraits</option>
+              </select>
+            </label>
+            <label>
+              Title
+              <input type="text" name="title" maxlength="80" placeholder="e.g. Valley at dusk" />
+            </label>
+            <label>
+              Image
+              <input type="file" name="photo" accept="image/jpeg,image/png,image/webp,image/gif" required />
+            </label>
+            <button type="submit">Add to gallery</button>
+            <p id="upload-status" class="status" role="status"></p>
+          </form>
+          <div id="admin-gallery" class="admin-gallery"></div>
+        </section>
+      </main>
+    </div>
+
+    <script src="/js/admin.js"></script>
+  </body>
+</html>

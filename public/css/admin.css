@@ -1,0 +1,261 @@
+:root {
+  --bg: #161616;
+  --bg-elev: #222;
+  --ink: #efece6;
+  --muted: #9a958c;
+  --line: rgba(239, 236, 230, 0.12);
+  --accent: #d7c4a3;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Manrope, system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+.login-view {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+}
+
+.login-card {
+  width: min(100%, 26rem);
+}
+
+.eyebrow {
+  margin: 0 0 0.6rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+h1,
+h2,
+.wordmark {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 500;
+}
+
+h1 {
+  margin: 0 0 1.5rem;
+  font-size: 2.4rem;
+}
+
+.login-card form,
+.upload-form {
+  display: grid;
+  gap: 0.9rem;
+}
+
+label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+input[type="password"],
+input[type="text"],
+input[type="file"],
+select {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: var(--bg-elev);
+  color: var(--ink);
+  padding: 0.75rem 0.85rem;
+}
+
+button {
+  justify-self: start;
+  border: 0;
+  background: var(--ink);
+  color: #161616;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.8rem 1.2rem;
+  cursor: pointer;
+}
+
+button.ghost,
+.header-actions button {
+  background: transparent;
+  color: var(--muted);
+  padding: 0;
+}
+
+.status {
+  margin: 0;
+  color: var(--accent);
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.9rem;
+}
+
+.status.error {
+  color: #e2a39a;
+}
+
+.studio-view[hidden],
+.login-view[hidden] {
+  display: none;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 1.3rem 6vw;
+  border-bottom: 1px solid var(--line);
+}
+
+.wordmark {
+  color: inherit;
+  text-decoration: none;
+  font-size: 1.6rem;
+}
+
+.header-actions {
+  display: flex;
+  gap: 1.2rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.admin-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 3rem;
+  padding: 2.5rem 6vw 4rem;
+}
+
+.section-head {
+  margin-bottom: 1.2rem;
+}
+
+.section-head h2 {
+  margin: 0 0 0.3rem;
+  font-size: 1.8rem;
+}
+
+.section-head p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.inbox {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.message {
+  background: var(--bg-elev);
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line);
+}
+
+.message.new {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+}
+
+.message header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.45rem;
+}
+
+.message strong {
+  font-weight: 600;
+}
+
+.message time,
+.message a {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.message p {
+  margin: 0.4rem 0 0.8rem;
+  white-space: pre-wrap;
+}
+
+.message footer {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.admin-gallery {
+  display: grid;
+  gap: 1.6rem;
+  margin-top: 1.4rem;
+}
+
+.admin-series h3 {
+  margin: 0 0 0.7rem;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.admin-gallery-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+
+.admin-gallery figure {
+  margin: 0;
+  background: #111;
+}
+
+.admin-gallery img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+.admin-gallery figcaption {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.55rem 0.6rem 0.7rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.empty {
+  color: var(--muted);
+}
+
+@media (max-width: 900px) {
+  .admin-main,
+  .admin-gallery-grid {
+    grid-template-columns: 1fr;
+  }
+}
