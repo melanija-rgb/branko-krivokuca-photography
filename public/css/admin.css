@@ -242,7 +242,7 @@ button.ghost,
 
 .admin-gallery figcaption {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 0.5rem;
   padding: 0.55rem 0.6rem 0.7rem;
   font-size: 0.78rem;
