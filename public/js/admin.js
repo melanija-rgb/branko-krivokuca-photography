@@ -15,20 +15,25 @@ loginForm.addEventListener("submit", async (event) => {
   loginStatus.textContent = "";
 
   const password = new FormData(loginForm).get("password");
-  const response = await fetch("/api/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ password }),
-  });
-  const payload = await response.json();
+  try {
+    const response = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password }),
+    });
+    const payload = await response.json().catch(() => ({}));
 
-  if (!response.ok) {
+    if (!response.ok) {
+      loginStatus.classList.add("error");
+      loginStatus.textContent = payload.error || "Could not sign in.";
+      return;
+    }
+
+    showStudio();
+  } catch {
     loginStatus.classList.add("error");
-    loginStatus.textContent = payload.error || "Could not sign in.";
-    return;
+    loginStatus.textContent = "Could not sign in.";
   }
-
-  showStudio();
 });
 
 document.querySelector("#logout").addEventListener("click", async () => {
@@ -81,8 +86,12 @@ adminGallery.addEventListener("click", async (event) => {
 });
 
 async function boot() {
-  const session = await fetch("/api/session").then((res) => res.json());
-  if (session.authenticated) showStudio();
+  try {
+    const session = await fetch("/api/session").then((res) => res.json());
+    if (session.authenticated) showStudio();
+  } catch {
+    /* stay on the login screen */
+  }
 }
 
 function showStudio() {
@@ -93,8 +102,10 @@ function showStudio() {
 }
 
 async function loadInquiries() {
-  const items = await fetch("/api/inquiries").then((res) => res.json());
-  if (!items.length) {
+  const items = await fetch("/api/inquiries")
+    .then((res) => res.json())
+    .catch(() => []);
+  if (!Array.isArray(items) || !items.length) {
     inbox.innerHTML = `<p class="empty">No messages yet.</p>`;
     return;
   }
@@ -125,7 +136,10 @@ async function loadInquiries() {
 }
 
 async function loadPhotos() {
-  const photos = await fetch("/api/photos").then((res) => res.json());
+  const photos = await fetch("/api/photos")
+    .then((res) => res.json())
+    .catch(() => []);
+  if (!Array.isArray(photos)) return;
   const groups = [
     { id: "landscape", label: "Landscape" },
     { id: "architecture", label: "Architecture" },
@@ -146,9 +160,8 @@ async function loadPhotos() {
 function photoFigure(photo) {
   return `
     <figure>
-      <img src="${escapeAttr(photo.src)}" alt="${escapeAttr(photo.title)}" />
+      <img src="${escapeAttr(photo.src)}" alt="" />
       <figcaption>
-        <span>${escapeHtml(photo.title)}</span>
         <button class="ghost" type="button" data-photo-id="${photo.id}">Remove</button>
       </figcaption>
     </figure>

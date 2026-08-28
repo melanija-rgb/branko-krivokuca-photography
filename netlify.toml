@@ -1,6 +1,33 @@
 [build]
   publish = "public"
 
+[functions]
+  directory = "netlify/functions"
+
+[[redirects]]
+  from = "/api/login"
+  to = "/.netlify/functions/login"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/logout"
+  to = "/.netlify/functions/logout"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/session"
+  to = "/.netlify/functions/session"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/photos"
+  to = "/photos.json"
+  status = 200
+  conditions = {Method = ["GET"]}
+
 [[redirects]]
   from = "/admin"
   to = "/admin.html"
