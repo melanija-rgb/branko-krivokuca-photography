@@ -1,7 +1,7 @@
 const crypto = require("crypto");
 const { connectLambda } = require("@netlify/blobs");
 const { json, optionsResponse, parseBody, isAdmin, corsHeaders } = require("../lib/admin-auth");
-const { useEvent, listPhotos, addPhoto, getPhotoFile, deletePhoto } = require("../lib/photos-store");
+const { useEvent, listPhotos, listRemoved, addPhoto, getPhotoFile, deletePhoto } = require("../lib/photos-store");
 
 const CATEGORIES = ["landscape", "architecture", "portraits"];
 const ALLOWED_MIME = {
@@ -22,7 +22,8 @@ exports.handler = async (event) => {
   const method = event.httpMethod;
 
   if (method === "GET" && isCollectionPath(path)) {
-    return json(200, await listPhotos(), {}, event);
+    const [photos, removed] = await Promise.all([listPhotos(), listRemoved()]);
+    return json(200, { photos, removed }, {}, event);
   }
 
   const fileMatch = path.match(/\/photos\/([^/]+)\/file\/?$/);

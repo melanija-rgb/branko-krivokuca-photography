@@ -182,18 +182,34 @@ async function loadPhotos() {
 }
 
 async function fetchPhotoList() {
-  const [uploaded, builtIn] = await Promise.all([
-    fetchJson(liveApi("/api/photos")),
+  const [catalog, builtIn] = await Promise.all([
+    fetchCatalog(liveApi("/api/photos")),
     fetchJson("/photos.json"),
   ]);
+  const removed = new Set(catalog.removed);
   const seen = new Set();
   const merged = [];
-  for (const photo of [...uploaded, ...builtIn]) {
-    if (!photo || !photo.id || seen.has(photo.id)) continue;
+  for (const photo of [...catalog.photos, ...builtIn]) {
+    if (!photo || !photo.id || seen.has(photo.id) || removed.has(photo.id)) continue;
     seen.add(photo.id);
     merged.push(photo);
   }
   return merged;
+}
+
+async function fetchCatalog(url) {
+  try {
+    const response = await fetch(url, { credentials: "include" });
+    if (!response.ok) return { photos: [], removed: [] };
+    const data = await response.json();
+    if (Array.isArray(data)) return { photos: data, removed: [] };
+    return {
+      photos: Array.isArray(data.photos) ? data.photos : [],
+      removed: Array.isArray(data.removed) ? data.removed : [],
+    };
+  } catch {
+    return { photos: [], removed: [] };
+  }
 }
 
 async function fetchJson(url) {
@@ -208,12 +224,11 @@ async function fetchJson(url) {
 }
 
 function photoFigure(photo) {
-  const canRemove = String(photo.src || "").includes("/api/photos/");
   return `
     <figure>
       <img src="${escapeAttr(photoSrc(photo.src))}" alt="" />
       <figcaption>
-        ${canRemove ? `<button class="ghost" type="button" data-photo-id="${photo.id}">Remove</button>` : ""}
+        <button class="ghost" type="button" data-photo-id="${photo.id}">Remove</button>
       </figcaption>
     </figure>
   `;

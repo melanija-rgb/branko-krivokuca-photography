@@ -87,15 +87,17 @@ async function loadGallery() {
 }
 
 async function loadPhotos() {
-  const [builtIn, uploaded] = await Promise.all([
+  const [builtIn, catalog] = await Promise.all([
     fetch("/photos.json").then((response) => (response.ok ? response.json() : [])).catch(() => []),
     fetch(liveApi("/api/photos")).then((response) => (response.ok ? response.json() : [])).catch(() => []),
   ]);
+  const uploaded = Array.isArray(catalog) ? catalog : catalog && Array.isArray(catalog.photos) ? catalog.photos : [];
+  const removed = new Set(!Array.isArray(catalog) && catalog && Array.isArray(catalog.removed) ? catalog.removed : []);
   if (!Array.isArray(builtIn) && !Array.isArray(uploaded)) throw new Error("Gallery unavailable");
   const seen = new Set();
   const merged = [];
-  for (const photo of [...(Array.isArray(uploaded) ? uploaded : []), ...(Array.isArray(builtIn) ? builtIn : [])]) {
-    if (!photo || !photo.id || seen.has(photo.id)) continue;
+  for (const photo of [...uploaded, ...(Array.isArray(builtIn) ? builtIn : [])]) {
+    if (!photo || !photo.id || seen.has(photo.id) || removed.has(photo.id)) continue;
     seen.add(photo.id);
     merged.push(photo);
   }

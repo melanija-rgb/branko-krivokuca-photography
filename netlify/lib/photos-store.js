@@ -2,6 +2,7 @@ const { getStore } = require("@netlify/blobs");
 
 const STORE_NAME = "photos";
 const INDEX_KEY = "index";
+const REMOVED_KEY = "removed";
 
 let currentEvent = null;
 
@@ -52,8 +53,14 @@ async function listPhotos() {
     }
   }
 
+  const removed = new Set(await listRemoved());
   items.sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")));
-  return items;
+  return items.filter((photo) => photo && photo.id && !removed.has(photo.id));
+}
+
+async function listRemoved() {
+  const ids = (await store().get(REMOVED_KEY, { type: "json" })) || [];
+  return Array.isArray(ids) ? ids.filter(Boolean) : [];
 }
 
 async function addPhoto({ id, title, category, mime, buffer }) {
@@ -88,18 +95,22 @@ async function deletePhoto(id) {
   const items = (await s.get(INDEX_KEY, { type: "json" })) || [];
   const list = Array.isArray(items) ? items : [];
   const next = list.filter((photo) => photo && photo.id !== id);
-  const inIndex = next.length !== list.length;
   const leftover = await s.get(metaKey(id), { type: "json" });
-  if (!inIndex && !leftover) return false;
   await s.setJSON(INDEX_KEY, next);
   await s.delete(fileKey(id));
   if (leftover) await s.delete(metaKey(id));
+  const removed = await listRemoved();
+  if (!removed.includes(id)) {
+    removed.push(id);
+    await s.setJSON(REMOVED_KEY, removed);
+  }
   return true;
 }
 
 module.exports = {
   useEvent,
   listPhotos,
+  listRemoved,
   addPhoto,
   getPhotoFile,
   deletePhoto,
