@@ -5,11 +5,34 @@ const COOKIE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "branko-studio";
 const SESSION_SECRET = process.env.SESSION_SECRET || "krivokuca-local-session";
 
-function json(statusCode, body, extraHeaders = {}) {
+function corsHeaders(event) {
+  const origin = String((event && event.headers && (event.headers.origin || event.headers.Origin)) || "");
+  const allowed =
+    origin === "https://branko-krivokuca-photography.netlify.app" ||
+    origin === "http://localhost:3000" ||
+    origin === "http://127.0.0.1:3000" ||
+    origin === "http://localhost:5173" ||
+    origin === "http://127.0.0.1:5173" ||
+    /\.netlify\.app$/.test(origin);
+  return {
+    "Access-Control-Allow-Origin": allowed ? origin : "https://branko-krivokuca-photography.netlify.app",
+    "Access-Control-Allow-Credentials": "true",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
+    Vary: "Origin",
+  };
+}
+
+function optionsResponse(event) {
+  return { statusCode: 204, headers: corsHeaders(event), body: "" };
+}
+
+function json(statusCode, body, extraHeaders = {}, event) {
   return {
     statusCode,
     headers: {
       "Content-Type": "application/json",
+      ...(event ? corsHeaders(event) : {}),
       ...extraHeaders,
     },
     body: JSON.stringify(body),
@@ -59,16 +82,17 @@ function sessionCookie(token, secure) {
     `${COOKIE_NAME}=${token}`,
     "Path=/",
     "HttpOnly",
-    "SameSite=Lax",
     `Max-Age=${Math.floor(COOKIE_MAX_AGE_MS / 1000)}`,
   ];
-  if (secure) parts.push("Secure");
+  if (secure) parts.push("SameSite=None", "Secure");
+  else parts.push("SameSite=Lax");
   return parts.join("; ");
 }
 
 function clearCookie(secure) {
-  const parts = [`${COOKIE_NAME}=`, "Path=/", "HttpOnly", "SameSite=Lax", "Max-Age=0"];
-  if (secure) parts.push("Secure");
+  const parts = [`${COOKIE_NAME}=`, "Path=/", "HttpOnly", "Max-Age=0"];
+  if (secure) parts.push("SameSite=None", "Secure");
+  else parts.push("SameSite=Lax");
   return parts.join("; ");
 }
 
@@ -88,6 +112,8 @@ function isAdmin(event) {
 module.exports = {
   ADMIN_PASSWORD,
   json,
+  corsHeaders,
+  optionsResponse,
   parseBody,
   isSecureRequest,
   secureEqual,

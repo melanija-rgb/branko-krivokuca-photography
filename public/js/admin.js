@@ -1,3 +1,9 @@
+const LIVE_API = "https://branko-krivokuca-photography.netlify.app";
+
+function liveApi(path) {
+  return LIVE_API + path;
+}
+
 const loginView = document.querySelector("#login-view");
 const studioView = document.querySelector("#studio-view");
 const loginForm = document.querySelector("#login-form");
@@ -16,9 +22,10 @@ loginForm.addEventListener("submit", async (event) => {
 
   const password = new FormData(loginForm).get("password");
   try {
-    const response = await fetch("/api/login", {
+    const response = await fetch(liveApi("/api/login"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({ password }),
     });
     const payload = await response.json().catch(() => ({}));
@@ -37,7 +44,7 @@ loginForm.addEventListener("submit", async (event) => {
 });
 
 document.querySelector("#logout").addEventListener("click", async () => {
-  await fetch("/api/logout", { method: "POST" });
+  await fetch(liveApi("/api/logout"), { method: "POST", credentials: "include" });
   studioView.hidden = true;
   loginView.hidden = false;
 });
@@ -70,10 +77,10 @@ inbox.addEventListener("click", async (event) => {
   const { action, id } = button.dataset;
 
   if (action === "read") {
-    await fetch(`/api/inquiries/${id}/read`, { method: "POST" });
+    await fetch(liveApi(`/api/inquiries/${id}/read`), { method: "POST", credentials: "include" });
   }
   if (action === "delete") {
-    await fetch(`/api/inquiries/${id}`, { method: "DELETE" });
+    await fetch(liveApi(`/api/inquiries/${id}`), { method: "DELETE", credentials: "include" });
   }
   loadInquiries();
 });
@@ -87,7 +94,7 @@ adminGallery.addEventListener("click", async (event) => {
 
 async function boot() {
   try {
-    const session = await fetch("/api/session").then((res) => res.json());
+    const session = await fetch(liveApi("/api/session"), { credentials: "include" }).then((res) => res.json());
     if (session.authenticated) showStudio();
   } catch {
     /* stay on the login screen */
@@ -102,10 +109,9 @@ function showStudio() {
 }
 
 async function loadInquiries() {
-  const items = await fetch("/api/inquiries")
-    .then((res) => res.json())
-    .catch(() => []);
-  if (!Array.isArray(items) || !items.length) {
+  const response = await fetch(liveApi("/api/inquiries"), { credentials: "include" }).catch(() => null);
+  const items = response ? await response.json().catch(() => []) : [];
+  if (!response || !response.ok || !Array.isArray(items) || !items.length) {
     inbox.innerHTML = `<p class="empty">No messages yet.</p>`;
     return;
   }

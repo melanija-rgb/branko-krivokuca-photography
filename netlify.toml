@@ -23,6 +23,18 @@
   force = true
 
 [[redirects]]
+  from = "/api/inquiries"
+  to = "/.netlify/functions/inquiries"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/inquiries/*"
+  to = "/.netlify/functions/inquiries"
+  status = 200
+  force = true
+
+[[redirects]]
   from = "/api/photos"
   to = "/photos.json"
   status = 200

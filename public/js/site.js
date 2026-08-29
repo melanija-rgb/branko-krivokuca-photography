@@ -1,3 +1,9 @@
+const LIVE_API = "https://branko-krivokuca-photography.netlify.app";
+
+function liveApi(path) {
+  return LIVE_API + path;
+}
+
 const form = document.querySelector("#contact-form");
 const statusEl = document.querySelector("#form-status");
 const lightbox = document.querySelector("#lightbox");
@@ -35,23 +41,14 @@ form.addEventListener("submit", async (event) => {
   const data = Object.fromEntries(new FormData(form).entries());
 
   try {
-    if (isLocalHost()) {
-      const response = await fetch("/api/inquiries", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-      const payload = await response.json();
-      if (!response.ok) throw new Error(payload.error || "Could not send the message.");
-    } else {
-      const body = new URLSearchParams(data);
-      const response = await fetch("/", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body,
-      });
-      if (!response.ok) throw new Error("Could not send the message.");
-    }
+    const response = await fetch(liveApi("/api/inquiries"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(payload.error || "Could not send the message.");
 
     form.reset();
     statusEl.textContent = "Thank you. Branko will get back to you.";
@@ -100,7 +97,15 @@ async function loadPhotos() {
 }
 
 function isLocalHost() {
-  return location.hostname === "localhost" || location.hostname === "127.0.0.1";
+  const host = location.hostname;
+  return (
+    host === "localhost" ||
+    host === "127.0.0.1" ||
+    host === "[::1]" ||
+    /^10\./.test(host) ||
+    /^192\.168\./.test(host) ||
+    /^172\.(1[6-9]|2\d|3[0-1])\./.test(host)
+  );
 }
 
 function photoCard(photo) {

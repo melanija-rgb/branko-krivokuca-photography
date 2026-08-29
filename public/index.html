@@ -120,12 +120,13 @@
           class="contact-form"
           name="contact"
           method="POST"
+          action="/thanks.html"
           data-netlify="true"
           netlify-honeypot="bot-field"
         >
           <input type="hidden" name="form-name" value="contact" />
           <p class="honeypot">
-            <label>Don’t fill this <input name="bot-field" /></label>
+            <label>Don’t fill this <input name="bot-field" autocomplete="off" tabindex="-1" /></label>
           </p>
           <div class="row">
             <label>
@@ -160,6 +161,6 @@
       <form method="dialog"><button type="submit" aria-label="Close">Close</button></form>
     </dialog>
 
-    <script src="/js/site.js?v=3"></script>
+    <script src="/js/site.js?v=10"></script>
   </body>
 </html>
