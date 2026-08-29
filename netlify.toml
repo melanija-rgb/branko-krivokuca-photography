@@ -36,9 +36,15 @@
 
 [[redirects]]
   from = "/api/photos"
-  to = "/photos.json"
+  to = "/.netlify/functions/photos"
   status = 200
-  conditions = {Method = ["GET"]}
+  force = true
+
+[[redirects]]
+  from = "/api/photos/*"
+  to = "/.netlify/functions/photos"
+  status = 200
+  force = true
 
 [[redirects]]
   from = "/admin"

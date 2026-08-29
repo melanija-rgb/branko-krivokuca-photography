@@ -9,9 +9,9 @@ const statusEl = document.querySelector("#form-status");
 const lightbox = document.querySelector("#lightbox");
 const lightboxImage = lightbox.querySelector("img");
 const series = [
-  { id: "landscape", empty: "Landscape photographs will appear here." },
-  { id: "architecture", empty: "Architecture photographs will appear here." },
-  { id: "portraits", empty: "Portraits will appear here." },
+  { id: "landscape", emptyKey: "emptyLandscape" },
+  { id: "architecture", emptyKey: "emptyArchitecture" },
+  { id: "portraits", emptyKey: "emptyPortraits" },
 ];
 
 loadGallery();
@@ -23,20 +23,20 @@ const siteNav = document.querySelector("#site-nav");
 menuToggle.addEventListener("click", () => {
   const open = header.classList.toggle("is-open");
   menuToggle.setAttribute("aria-expanded", String(open));
-  menuToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+  menuToggle.setAttribute("aria-label", t(open ? "closeMenu" : "openMenu"));
 });
 
 siteNav.addEventListener("click", (event) => {
   if (!event.target.closest("a")) return;
   header.classList.remove("is-open");
   menuToggle.setAttribute("aria-expanded", "false");
-  menuToggle.setAttribute("aria-label", "Open menu");
+  menuToggle.setAttribute("aria-label", t("openMenu"));
 });
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   statusEl.classList.remove("error");
-  statusEl.textContent = "Sending…";
+  statusEl.textContent = t("sending");
 
   const data = Object.fromEntries(new FormData(form).entries());
 
@@ -48,10 +48,10 @@ form.addEventListener("submit", async (event) => {
       body: JSON.stringify(data),
     });
     const payload = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(payload.error || "Could not send the message.");
+    if (!response.ok) throw new Error(payload.error || t("sendError"));
 
     form.reset();
-    statusEl.textContent = "Thank you. Branko will get back to you.";
+    statusEl.textContent = t("thankYou");
   } catch (error) {
     statusEl.classList.add("error");
     statusEl.textContent = error.message;
@@ -69,11 +69,11 @@ document.querySelector("main").addEventListener("click", (event) => {
 async function loadGallery() {
   try {
     const photos = await loadPhotos();
-    series.forEach(({ id, empty }) => {
+    series.forEach(({ id, emptyKey }) => {
       const gallery = document.querySelector(`#${id} .gallery`);
       const items = photos.filter((photo) => photo.category === id);
       if (!items.length) {
-        gallery.innerHTML = `<p class="gallery-empty">${empty}</p>`;
+        gallery.innerHTML = `<p class="gallery-empty" data-i18n-empty="${emptyKey}">${t(emptyKey)}</p>`;
         return;
       }
       gallery.innerHTML = items.map(photoCard).join("");
@@ -81,38 +81,38 @@ async function loadGallery() {
   } catch {
     series.forEach(({ id }) => {
       const gallery = document.querySelector(`#${id} .gallery`);
-      gallery.innerHTML = `<p class="gallery-empty">The gallery could not be loaded.</p>`;
+      gallery.innerHTML = `<p class="gallery-empty" data-i18n-empty="galleryError">${t("galleryError")}</p>`;
     });
   }
 }
 
 async function loadPhotos() {
-  if (isLocalHost()) {
-    const response = await fetch("/api/photos");
-    if (response.ok) return response.json();
+  const [builtIn, uploaded] = await Promise.all([
+    fetch("/photos.json").then((response) => (response.ok ? response.json() : [])).catch(() => []),
+    fetch(liveApi("/api/photos")).then((response) => (response.ok ? response.json() : [])).catch(() => []),
+  ]);
+  if (!Array.isArray(builtIn) && !Array.isArray(uploaded)) throw new Error("Gallery unavailable");
+  const seen = new Set();
+  const merged = [];
+  for (const photo of [...(Array.isArray(uploaded) ? uploaded : []), ...(Array.isArray(builtIn) ? builtIn : [])]) {
+    if (!photo || !photo.id || seen.has(photo.id)) continue;
+    seen.add(photo.id);
+    merged.push(photo);
   }
-  const response = await fetch("/photos.json");
-  if (!response.ok) throw new Error("Gallery unavailable");
-  return response.json();
+  if (!merged.length && !Array.isArray(builtIn)) throw new Error("Gallery unavailable");
+  return merged;
 }
 
-function isLocalHost() {
-  const host = location.hostname;
-  return (
-    host === "localhost" ||
-    host === "127.0.0.1" ||
-    host === "[::1]" ||
-    /^10\./.test(host) ||
-    /^192\.168\./.test(host) ||
-    /^172\.(1[6-9]|2\d|3[0-1])\./.test(host)
-  );
+function gallerySrc(src) {
+  if (String(src || "").startsWith("/api/")) return liveApi(src);
+  return src;
 }
 
 function photoCard(photo) {
   return `
     <article>
-      <button type="button" data-src="${escapeAttr(photo.src)}" data-title="${escapeAttr(photo.title)}">
-        <img src="${escapeAttr(photo.src)}" alt="" />
+      <button type="button" data-src="${escapeAttr(gallerySrc(photo.src))}" data-title="${escapeAttr(photo.title)}">
+        <img src="${escapeAttr(gallerySrc(photo.src))}" alt="" />
       </button>
     </article>
   `;

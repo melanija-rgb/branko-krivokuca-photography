@@ -54,21 +54,38 @@ uploadForm.addEventListener("submit", async (event) => {
   uploadStatus.classList.remove("error");
   uploadStatus.textContent = "Uploading…";
 
-  const response = await fetch("/api/photos", {
-    method: "POST",
-    body: new FormData(uploadForm),
-  });
-  const payload = await response.json();
+  try {
+    const form = new FormData(uploadForm);
+    const file = form.get("photo");
+    if (!(file instanceof File) || !file.size) {
+      throw new Error("Choose an image to upload.");
+    }
 
-  if (!response.ok) {
+    const image = await prepareImage(file);
+    const response = await fetch(liveApi("/api/photos"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        category: form.get("category"),
+        title: form.get("title"),
+        mime: image.mime,
+        data: image.data,
+      }),
+    });
+    const payload = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(payload.error || "Upload failed.");
+    }
+
+    uploadForm.reset();
+    uploadStatus.textContent = "Added to the gallery.";
+    loadPhotos();
+  } catch (error) {
     uploadStatus.classList.add("error");
-    uploadStatus.textContent = payload.error || "Upload failed.";
-    return;
+    uploadStatus.textContent = error.message || "Upload failed.";
   }
-
-  uploadForm.reset();
-  uploadStatus.textContent = "Added to the gallery.";
-  loadPhotos();
 });
 
 inbox.addEventListener("click", async (event) => {
@@ -88,7 +105,10 @@ inbox.addEventListener("click", async (event) => {
 adminGallery.addEventListener("click", async (event) => {
   const button = event.target.closest("button[data-photo-id]");
   if (!button) return;
-  await fetch(`/api/photos/${button.dataset.photoId}`, { method: "DELETE" });
+  await fetch(liveApi(`/api/photos/${button.dataset.photoId}`), {
+    method: "DELETE",
+    credentials: "include",
+  });
   loadPhotos();
 });
 
@@ -162,29 +182,88 @@ async function loadPhotos() {
 }
 
 async function fetchPhotoList() {
-  const sources = ["/api/photos", "/photos.json"];
-  for (const url of sources) {
-    try {
-      const response = await fetch(url);
-      if (!response.ok) continue;
-      const data = await response.json();
-      if (Array.isArray(data)) return data;
-    } catch {
-      /* try the next source */
-    }
+  const [uploaded, builtIn] = await Promise.all([
+    fetchJson(liveApi("/api/photos")),
+    fetchJson("/photos.json"),
+  ]);
+  const seen = new Set();
+  const merged = [];
+  for (const photo of [...uploaded, ...builtIn]) {
+    if (!photo || !photo.id || seen.has(photo.id)) continue;
+    seen.add(photo.id);
+    merged.push(photo);
   }
-  return [];
+  return merged;
+}
+
+async function fetchJson(url) {
+  try {
+    const response = await fetch(url, { credentials: "include" });
+    if (!response.ok) return [];
+    const data = await response.json();
+    return Array.isArray(data) ? data : [];
+  } catch {
+    return [];
+  }
 }
 
 function photoFigure(photo) {
+  const canRemove = String(photo.src || "").includes("/api/photos/");
   return `
     <figure>
-      <img src="${escapeAttr(photo.src)}" alt="" />
+      <img src="${escapeAttr(photoSrc(photo.src))}" alt="" />
       <figcaption>
-        <button class="ghost" type="button" data-photo-id="${photo.id}">Remove</button>
+        ${canRemove ? `<button class="ghost" type="button" data-photo-id="${photo.id}">Remove</button>` : ""}
       </figcaption>
     </figure>
   `;
+}
+
+function photoSrc(src) {
+  if (String(src || "").startsWith("/api/")) return liveApi(src);
+  return src;
+}
+
+async function prepareImage(file) {
+  const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" }).catch(() => null);
+  if (!bitmap) throw new Error("Please upload a JPG, PNG, WEBP, or GIF image.");
+
+  const max = 2000;
+  const scale = Math.min(1, max / Math.max(bitmap.width, bitmap.height));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+  canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+  canvas.getContext("2d").drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  bitmap.close?.();
+
+  let quality = 0.82;
+  let blob = await canvasToJpeg(canvas, quality);
+  if (blob.size > 3.2 * 1024 * 1024) blob = await canvasToJpeg(canvas, 0.68);
+  if (blob.size > 3.2 * 1024 * 1024) blob = await canvasToJpeg(canvas, 0.52);
+
+  return { mime: "image/jpeg", data: await blobToBase64(blob) };
+}
+
+function canvasToJpeg(canvas, quality) {
+  return new Promise((resolve, reject) => {
+    canvas.toBlob((blob) => {
+      if (blob) resolve(blob);
+      else reject(new Error("Could not prepare the image."));
+    }, "image/jpeg", quality);
+  });
+}
+
+function blobToBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = String(reader.result || "");
+      const comma = result.indexOf(",");
+      resolve(comma >= 0 ? result.slice(comma + 1) : result);
+    };
+    reader.onerror = () => reject(new Error("Could not read the image."));
+    reader.readAsDataURL(blob);
+  });
 }
 
 function escapeHtml(value) {

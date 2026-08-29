@@ -3,80 +3,97 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Branko Krivokuca — Photographer</title>
+    <title data-i18n-title="title">Branko Krivokuca — Photographer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/css/site.css?v=4" />
+    <link rel="stylesheet" href="/css/site.css?v=7" />
   </head>
   <body>
     <header class="site-header">
       <a class="wordmark" href="#top">Branko Krivokuca</a>
-      <button
-        class="menu-toggle"
-        type="button"
-        aria-expanded="false"
-        aria-controls="site-nav"
-        aria-label="Open menu"
-      >
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
       <nav id="site-nav">
-        <a class="nav-mobile-only" href="#landscape">Gallery</a>
-        <a class="nav-desktop-only" href="#landscape">Landscape</a>
-        <a class="nav-desktop-only" href="#architecture">Architecture</a>
-        <a class="nav-desktop-only" href="#portraits">Portraits</a>
-        <a href="#social">Social</a>
-        <a href="#contact">Contact</a>
+        <a class="nav-mobile-only" href="#landscape" data-i18n="gallery">Gallery</a>
+        <a class="nav-desktop-only" href="#landscape" data-i18n="landscape">Landscape</a>
+        <a class="nav-desktop-only" href="#architecture" data-i18n="architecture">Architecture</a>
+        <a class="nav-desktop-only" href="#portraits" data-i18n="portraits">Portraits</a>
+        <a href="#social" data-i18n="social">Social</a>
+        <a href="#contact" data-i18n="contact">Contact</a>
       </nav>
+      <div class="header-tools">
+        <div class="lang-switch" role="group" aria-label="Language">
+          <button type="button" data-lang="en" aria-label="English">
+            <svg viewBox="0 0 60 30" aria-hidden="true">
+              <rect width="60" height="30" fill="#012169" />
+              <path d="M0 0 L60 30 M60 0 L0 30" stroke="#fff" stroke-width="6" />
+              <path d="M0 0 L60 30 M60 0 L0 30" stroke="#C8102E" stroke-width="2" />
+              <path d="M30 0 V30 M0 15 H60" stroke="#fff" stroke-width="10" />
+              <path d="M30 0 V30 M0 15 H60" stroke="#C8102E" stroke-width="6" />
+            </svg>
+          </button>
+          <button type="button" data-lang="sr" aria-label="Srpski">
+            <svg viewBox="0 0 60 30" aria-hidden="true">
+              <rect width="60" height="10" y="0" fill="#C6363C" />
+              <rect width="60" height="10" y="10" fill="#0C4076" />
+              <rect width="60" height="10" y="20" fill="#fff" />
+            </svg>
+          </button>
+        </div>
+        <button
+          class="menu-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="site-nav"
+          data-i18n-aria="openMenu"
+          data-i18n-aria-open="closeMenu"
+          aria-label="Open menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
     </header>
 
     <main id="top">
       <section class="intro">
-        <p class="eyebrow">Photographer</p>
-        <h1>Landscape and nature photographer.</h1>
-        <p class="roles">Climber · Mountaineer</p>
-        <p class="lede">Prints available. Work is shown in three series below.</p>
-        <ul class="facts">
-          <li>📍 Banja Luka</li>
-          <li>📸 Portraits and events</li>
-          <li>📩 For photography services, send a DM</li>
-        </ul>
+        <p class="eyebrow" data-i18n="photographer">Photographer</p>
+        <h1 data-i18n="headline">Landscape and nature photographer.</h1>
+        <p class="roles" data-i18n="roles">Climber · Mountaineer</p>
+        <p class="lede" data-i18n="lede">Prints available. Work is shown in three series below.</p>
       </section>
 
       <section id="landscape" class="series" data-category="landscape">
         <div class="section-head">
-          <p class="eyebrow">Series</p>
-          <h2>Landscape</h2>
+          <p class="eyebrow" data-i18n="series">Series</p>
+          <h2 data-i18n="landscape">Landscape</h2>
         </div>
         <div class="gallery" aria-live="polite"></div>
       </section>
 
       <section id="architecture" class="series" data-category="architecture">
         <div class="section-head">
-          <p class="eyebrow">Series</p>
-          <h2>Architecture</h2>
+          <p class="eyebrow" data-i18n="series">Series</p>
+          <h2 data-i18n="architecture">Architecture</h2>
         </div>
         <div class="gallery" aria-live="polite"></div>
       </section>
 
       <section id="portraits" class="series" data-category="portraits">
         <div class="section-head">
-          <p class="eyebrow">Series</p>
-          <h2>Portraits</h2>
+          <p class="eyebrow" data-i18n="series">Series</p>
+          <h2 data-i18n="portraits">Portraits</h2>
         </div>
         <div class="gallery" aria-live="polite"></div>
       </section>
 
       <section id="social" class="social">
         <div class="section-head">
-          <p class="eyebrow">Connect</p>
-          <h2>Social media</h2>
+          <p class="eyebrow" data-i18n="connect">Connect</p>
+          <h2 data-i18n="socialMedia">Social media</h2>
         </div>
         <div class="instagram-links">
           <a
@@ -108,8 +125,8 @@
 
       <section id="contact" class="contact">
         <div class="section-head">
-          <h2>Contact</h2>
-          <p>
+          <h2 data-i18n="contact">Contact</h2>
+          <p data-i18n="contactIntro">
             If you would like to book a session, order a print, or discuss a
             project, write to Branko here.
           </p>
@@ -126,41 +143,57 @@
         >
           <input type="hidden" name="form-name" value="contact" />
           <p class="honeypot">
-            <label>Don’t fill this <input name="bot-field" autocomplete="off" tabindex="-1" /></label>
+            <label>
+              <span data-i18n="honeypot">Don’t fill this</span>
+              <input name="bot-field" autocomplete="off" tabindex="-1" />
+            </label>
           </p>
           <div class="row">
             <label>
-              First name
+              <span data-i18n="firstName">First name</span>
               <input type="text" name="firstName" autocomplete="given-name" required maxlength="60" />
             </label>
             <label>
-              Last name
+              <span data-i18n="lastName">Last name</span>
               <input type="text" name="lastName" autocomplete="family-name" required maxlength="60" />
             </label>
           </div>
           <label>
-            Email
+            <span data-i18n="email">Email</span>
             <input type="email" name="email" autocomplete="email" required />
           </label>
           <label>
-            What would you like?
-            <textarea name="message" rows="6" required maxlength="4000" placeholder="Tell Branko about the service or project you have in mind."></textarea>
+            <span data-i18n="whatWouldYouLike">What would you like?</span>
+            <textarea
+              name="message"
+              rows="6"
+              required
+              maxlength="4000"
+              data-i18n-placeholder="messagePlaceholder"
+              placeholder="Tell Branko about the service or project you have in mind."
+            ></textarea>
           </label>
-          <button type="submit">Send message</button>
+          <button type="submit" data-i18n="sendMessage">Send message</button>
           <p id="form-status" class="form-status" role="status"></p>
         </form>
       </section>
     </main>
 
     <footer class="site-footer">
+      <ul class="facts">
+        <li>📍 Banja Luka</li>
+        <li data-i18n="factPortraits">📸 Portraits and events</li>
+        <li data-i18n="factDm">📩 For photography services, send a DM</li>
+      </ul>
       <p>© Branko Krivokuca</p>
     </footer>
 
     <dialog id="lightbox" class="lightbox">
       <img alt="" />
-      <form method="dialog"><button type="submit" aria-label="Close">Close</button></form>
+      <form method="dialog"><button type="submit" data-i18n-aria="close" aria-label="Close" data-i18n="close">Close</button></form>
     </dialog>
 
-    <script src="/js/site.js?v=10"></script>
+    <script src="/js/i18n.js?v=1"></script>
+    <script src="/js/site.js?v=13"></script>
   </body>
 </html>
