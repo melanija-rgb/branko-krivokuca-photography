@@ -66,6 +66,14 @@ document.querySelector("main").addEventListener("click", (event) => {
   lightbox.showModal();
 });
 
+document.addEventListener("contextmenu", (event) => {
+  if (event.target.closest(".gallery, .lightbox")) event.preventDefault();
+});
+
+document.addEventListener("dragstart", (event) => {
+  if (event.target.closest(".gallery, .lightbox")) event.preventDefault();
+});
+
 async function loadGallery() {
   try {
     const photos = await loadPhotos();
@@ -114,7 +122,7 @@ function photoCard(photo) {
   return `
     <article>
       <button type="button" data-src="${escapeAttr(gallerySrc(photo.src))}" data-title="${escapeAttr(photo.title)}">
-        <img src="${escapeAttr(gallerySrc(photo.src))}" alt="" />
+        <img src="${escapeAttr(gallerySrc(photo.src))}" alt="" draggable="false" />
       </button>
     </article>
   `;
