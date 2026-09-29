@@ -13,6 +13,8 @@ const lightboxImage = lightbox.querySelector("img");
 const categoryGrid = document.querySelector("#category-grid");
 const galleriesSection = document.querySelector("#galleries");
 const galleryView = document.querySelector("#gallery-view");
+const hero = document.querySelector("#hero");
+const heroPhotos = [...hero.querySelectorAll(".hero-photo")];
 const galleryTitle = document.querySelector("#gallery-title");
 const galleryEl = galleryView.querySelector(".gallery");
 
@@ -22,6 +24,18 @@ const GALLERIES = [
   { id: "wildlife", emptyKey: "emptyWildlife", coverId: "landscape-deer" },
   { id: "people", emptyKey: "emptyPeople", coverId: "portrait-daisy" },
 ];
+
+// Swap the hero by editing this list. Ids are resolved from the photo store when present.
+const HERO = [
+  { id: "landscape-milky-way", src: "/images/landscape-milky-way.png" },
+  { id: "landscape-sunset", src: "/images/landscape-sunset.png" },
+  { id: "landscape-canyon", src: "/images/landscape-canyon.png" },
+  { id: "landscape-snow", src: "/images/landscape-snow.png" },
+];
+
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+let heroTimer = 0;
+let heroKey = "";
 
 let photos = [];
 let photosReady = false;
@@ -95,12 +109,29 @@ document.querySelector("main").addEventListener("click", (event) => {
 });
 
 document.addEventListener("contextmenu", (event) => {
-  if (event.target.closest(".gallery, .lightbox, .category-tile")) event.preventDefault();
+  if (event.target.closest(".gallery, .lightbox, .category-tile, .hero")) event.preventDefault();
 });
 
 document.addEventListener("dragstart", (event) => {
-  if (event.target.closest(".gallery, .lightbox, .category-tile")) event.preventDefault();
+  if (event.target.closest(".gallery, .lightbox, .category-tile, .hero")) event.preventDefault();
 });
+
+categoryGrid.addEventListener("pointerdown", (event) => {
+  const tile = event.target.closest(".category-tile");
+  if (tile) tile.classList.add("is-hot");
+});
+
+categoryGrid.addEventListener("pointerup", clearHotTile);
+categoryGrid.addEventListener("pointercancel", clearHotTile);
+categoryGrid.addEventListener("pointerleave", clearHotTile);
+
+function clearHotTile() {
+  categoryGrid.querySelectorAll(".category-tile.is-hot").forEach((tile) => tile.classList.remove("is-hot"));
+}
+
+syncHeaderHeight();
+window.addEventListener("resize", syncHeaderHeight);
+startHero();
 
 window.addEventListener("hashchange", () => {
   if (location.hash === "#contact") {
@@ -126,6 +157,7 @@ async function loadGallery() {
     photos = await loadPhotos();
     photosReady = true;
     renderOverview();
+    startHero();
     showView(Boolean(currentGallery()));
   } catch {
     photosReady = false;
@@ -145,14 +177,14 @@ function photosIn(id) {
 }
 
 function renderOverview() {
-  categoryGrid.innerHTML = GALLERIES.map((gallery) => {
+  categoryGrid.innerHTML = GALLERIES.map((gallery, index) => {
     const items = photosIn(gallery.id);
     const cover = items.find((photo) => photo.id === gallery.coverId) || items[0];
     const image = cover
       ? `<img src="${escapeAttr(gallerySrc(cover.src))}" alt="" draggable="false" />`
       : "";
     return `
-      <a class="category-tile" href="#${gallery.id}">
+      <a class="category-tile" href="#${gallery.id}" data-accent="${gallery.id}" style="--reveal: ${index * 110}ms">
         <span class="category-tile-photo">${image}</span>
         <span class="category-tile-panel">
           <span class="category-tile-label" data-i18n="${gallery.id}">${t(gallery.id)}</span>
@@ -160,6 +192,7 @@ function renderOverview() {
       </a>
     `;
   }).join("");
+  revealTiles();
 }
 
 function currentGallery() {
@@ -173,15 +206,19 @@ function showView(scroll) {
     link.classList.toggle("is-active", Boolean(gallery && link.dataset.gallery === gallery.id));
   });
 
+  hero.hidden = Boolean(gallery);
+
   if (!gallery) {
     galleriesSection.hidden = false;
     galleryView.hidden = true;
+    delete galleryView.dataset.accent;
     if (scroll) requestAnimationFrame(() => scrollToHash());
     return;
   }
 
   galleriesSection.hidden = true;
   galleryView.hidden = false;
+  galleryView.dataset.accent = gallery.id;
   galleryTitle.dataset.i18n = gallery.id;
   galleryTitle.textContent = t(gallery.id);
   galleryEl.dataset.category = gallery.id;
@@ -194,6 +231,84 @@ function showView(scroll) {
   }
 
   if (scroll) requestAnimationFrame(() => galleryView.scrollIntoView({ block: "start" }));
+}
+
+function syncHeaderHeight() {
+  if (header.classList.contains("is-open")) return;
+  document.documentElement.style.setProperty("--header-h", `${header.offsetHeight}px`);
+}
+
+function revealTiles() {
+  const tiles = [...categoryGrid.querySelectorAll(".category-tile")];
+  if (reducedMotion || !("IntersectionObserver" in window)) {
+    tiles.forEach((tile) => tile.classList.add("is-in"));
+    return;
+  }
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-in");
+        observer.unobserve(entry.target);
+      });
+    },
+    { threshold: 0.28 }
+  );
+  tiles.forEach((tile) => observer.observe(tile));
+}
+
+function resolvedHeroSources() {
+  return HERO.map((item) => {
+    const photo = photos.find((entry) => entry.id === item.id);
+    if (photosReady && !photo) return "";
+    return photo ? gallerySrc(photo.src) : item.src;
+  }).filter(Boolean);
+}
+
+function startHero() {
+  const sources = resolvedHeroSources();
+  if (!sources.length) return;
+  const key = sources.join("|");
+  if (key === heroKey) return;
+  heroKey = key;
+  clearInterval(heroTimer);
+
+  let index = 0;
+  const [current, incoming] = heroPhotos;
+  primeHeroPhoto(current, sources[0], true);
+  if (sources.length < 2 || reducedMotion) return;
+
+  const preload = new Image();
+  preload.src = sources[1];
+
+  heroTimer = setInterval(() => {
+    index = (index + 1) % sources.length;
+    const enter = heroPhotos.find((photo) => !photo.classList.contains("is-on"));
+    const leave = heroPhotos.find((photo) => photo.classList.contains("is-on"));
+    const src = sources[index];
+    const reveal = () => {
+      enter.classList.remove("is-zoom");
+      void enter.offsetWidth;
+      enter.classList.add("is-on", "is-zoom");
+      leave.classList.remove("is-on");
+    };
+    if (enter.getAttribute("src") === src && enter.complete) reveal();
+    else {
+      enter.onload = () => {
+        enter.onload = null;
+        reveal();
+      };
+      enter.src = src;
+    }
+    const next = new Image();
+    next.src = sources[(index + 1) % sources.length];
+  }, 7600);
+}
+
+function primeHeroPhoto(photo, src, active) {
+  photo.src = src;
+  photo.classList.toggle("is-on", active);
+  photo.classList.toggle("is-zoom", active && !reducedMotion);
 }
 
 function scrollToHash() {

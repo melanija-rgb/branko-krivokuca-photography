@@ -5,6 +5,10 @@
   --muted: #9a958c;
   --line: rgba(239, 236, 230, 0.12);
   --accent: #d7c4a3;
+  --accent-landscape: #b7cbb4;
+  --accent-architecture: #e0d0b4;
+  --accent-wildlife: #d9a396;
+  --accent-people: #e8c4ce;
 }
 
 *,
@@ -224,6 +228,89 @@ h2 {
   scroll-margin-top: 5.5rem;
 }
 
+.hero {
+  position: relative;
+  margin: 0 -6vw;
+  height: calc(100svh - var(--header-h, 6.5rem));
+  min-height: 24rem;
+  overflow: hidden;
+  background: #050505;
+}
+
+.hero-stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.hero-photo {
+  position: absolute;
+  left: -8%;
+  top: -8%;
+  width: 116%;
+  height: 116%;
+  object-fit: cover;
+  opacity: 0;
+  transform: scale(1);
+  transition: opacity 1.7s ease;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.hero-photo.is-on {
+  opacity: 1;
+  z-index: 1;
+}
+
+.hero-photo.is-zoom {
+  animation: kenburns 18s linear forwards;
+}
+
+@keyframes kenburns {
+  from { transform: scale(1); }
+  to { transform: scale(1.1); }
+}
+
+.hero-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.12) 22%, rgba(0, 0, 0, 0) 46%),
+    linear-gradient(to top, rgba(8, 8, 8, 0.72) 0%, rgba(8, 8, 8, 0) 28%);
+  pointer-events: none;
+}
+
+.hero-cue {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: 1.5rem;
+  width: 1.45rem;
+  height: 2.35rem;
+  margin-left: -0.72rem;
+  border: 1px solid rgba(239, 236, 230, 0.55);
+  border-radius: 999px;
+}
+
+.hero-cue span {
+  position: absolute;
+  top: 0.4rem;
+  left: 50%;
+  width: 2px;
+  height: 0.45rem;
+  margin-left: -1px;
+  border-radius: 2px;
+  background: var(--ink);
+  animation: cue-drop 1.8s ease-in-out infinite;
+}
+
+@keyframes cue-drop {
+  0% { transform: translateY(0); opacity: 1; }
+  70% { transform: translateY(0.55rem); opacity: 0; }
+  100% { opacity: 0; }
+}
+
 .galleries {
   padding: 2.75rem 0 4.5rem;
 }
@@ -239,22 +326,49 @@ h2 {
   gap: 1.35rem 1.5rem;
 }
 
+.category-tile[data-accent="landscape"],
+.gallery-view[data-accent="landscape"] {
+  --tile-accent: var(--accent-landscape);
+}
+
+.category-tile[data-accent="architecture"],
+.gallery-view[data-accent="architecture"] {
+  --tile-accent: var(--accent-architecture);
+}
+
+.category-tile[data-accent="wildlife"],
+.gallery-view[data-accent="wildlife"] {
+  --tile-accent: var(--accent-wildlife);
+}
+
+.category-tile[data-accent="people"],
+.gallery-view[data-accent="people"] {
+  --tile-accent: var(--accent-people);
+}
+
 .category-tile {
+  --tile-accent: var(--accent);
   display: grid;
   grid-template-columns: 42% 1fr;
   width: 100%;
   color: inherit;
   text-decoration: none;
   background: rgba(239, 236, 230, 0.04);
-  transition: transform 0.25s ease;
+  border-top: 2px solid var(--tile-accent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tile-accent) 42%, transparent);
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.75s ease, transform 0.75s ease;
+  transition-delay: var(--reveal, 0ms);
 }
 
-.category-tile:hover {
-  transform: translateY(-3px);
+.category-tile.is-in {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .category-tile:focus-visible {
-  outline: 1px solid var(--accent);
+  outline: 1px solid var(--tile-accent);
   outline-offset: 3px;
 }
 
@@ -271,11 +385,8 @@ h2 {
   pointer-events: none;
   user-select: none;
   -webkit-user-drag: none;
-  transition: transform 0.45s ease;
-}
-
-.category-tile:hover .category-tile-photo img {
-  transform: scale(1.05);
+  transform: scale(1);
+  transition: transform 0.7s ease;
 }
 
 .category-tile-panel {
@@ -285,6 +396,7 @@ h2 {
   overflow: hidden;
   min-width: 0;
   background: linear-gradient(165deg, rgba(239, 236, 230, 0.16), rgba(239, 236, 230, 0.07));
+  transition: box-shadow 0.45s ease;
 }
 
 .category-tile-panel::after {
@@ -295,10 +407,11 @@ h2 {
   width: 150%;
   bottom: 0;
   height: 1.35rem;
-  background: rgba(239, 236, 230, 0.28);
+  background: color-mix(in srgb, var(--tile-accent) 62%, transparent);
   transform: skewY(-12deg);
   transform-origin: right bottom;
   pointer-events: none;
+  transition: background 0.45s ease;
 }
 
 .category-tile-label {
@@ -311,6 +424,43 @@ h2 {
   line-height: 1.35;
   text-align: center;
   text-transform: uppercase;
+  transition: transform 0.45s ease, color 0.45s ease, letter-spacing 0.45s ease;
+}
+
+.category-tile.is-in:hover .category-tile-photo img,
+.category-tile.is-in:focus-visible .category-tile-photo img,
+.category-tile.is-hot .category-tile-photo img {
+  transform: scale(1.08);
+}
+
+.category-tile.is-in:hover .category-tile-panel,
+.category-tile.is-in:focus-visible .category-tile-panel,
+.category-tile.is-hot .category-tile-panel {
+  box-shadow: inset 0 0 46px color-mix(in srgb, var(--tile-accent) 48%, transparent);
+}
+
+.category-tile.is-in:hover .category-tile-panel::after,
+.category-tile.is-in:focus-visible .category-tile-panel::after,
+.category-tile.is-hot .category-tile-panel::after {
+  background: var(--tile-accent);
+}
+
+.category-tile.is-in:hover .category-tile-label,
+.category-tile.is-in:focus-visible .category-tile-label,
+.category-tile.is-hot .category-tile-label {
+  transform: translateY(-5px);
+  color: #fff;
+  letter-spacing: 0.26em;
+}
+
+.gallery-view[data-accent] .gallery-back {
+  color: var(--tile-accent);
+}
+
+.gallery-view[data-accent] #gallery-title {
+  width: fit-content;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--tile-accent);
 }
 
 .gallery-back::before {
@@ -605,6 +755,48 @@ button[type="submit"]:hover {
   .category-tile-label {
     letter-spacing: 0.14em;
     font-size: 0.68rem;
+  }
+
+  .hero {
+    min-height: 20rem;
+  }
+}
+
+@media (hover: none) {
+  .category-tile.is-in:active .category-tile-photo img {
+    transform: scale(1.08);
+  }
+
+  .category-tile.is-in:active .category-tile-panel {
+    box-shadow: inset 0 0 46px color-mix(in srgb, var(--tile-accent) 48%, transparent);
+  }
+
+  .category-tile.is-in:active .category-tile-panel::after {
+    background: var(--tile-accent);
+  }
+
+  .category-tile.is-in:active .category-tile-label {
+    transform: translateY(-5px);
+    color: #fff;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-photo,
+  .hero-photo.is-zoom,
+  .hero-cue span,
+  .category-tile,
+  .category-tile-photo img,
+  .category-tile-label,
+  .category-tile-panel,
+  .category-tile-panel::after {
+    animation: none;
+    transition: none;
+  }
+
+  .category-tile {
+    opacity: 1;
+    transform: none;
   }
 }
 
