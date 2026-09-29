@@ -679,6 +679,11 @@ button[type="submit"]:hover {
 }
 
 @media (max-width: 800px) {
+  body.home {
+    height: 100dvh;
+    overflow: hidden;
+  }
+
   .contact,
   .row {
     grid-template-columns: 1fr;
@@ -693,24 +698,75 @@ button[type="submit"]:hover {
   }
 
   body.home .category-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, minmax(0, 1fr));
+    gap: 0.45rem;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
   }
 
   body.home .categories {
-    width: min(22.5rem, 88vw);
+    width: min(26rem, 92vw);
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    align-self: center;
+  }
+
+  body.home .site-header {
+    align-items: center;
+    padding: 0.95rem 5vw;
+  }
+
+  body.home .site-header.is-open {
+    background: rgba(12, 12, 12, 0.78);
+    backdrop-filter: blur(16px);
   }
 
   body.home .wordmark {
+    flex: 1 1 auto;
+    min-width: 0;
     margin-left: 0;
-    margin-right: auto;
+    margin-right: 0.75rem;
+    font-size: 1.32rem;
+  }
+
+  body.home .brand-role {
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
   }
 
   body.home .header-tools {
-    margin-left: 0;
+    flex: 0 0 auto;
+    margin-left: auto;
   }
 
   body.home nav {
     order: 4;
+    flex-basis: 100%;
+  }
+
+  body.home .home-hero {
+    height: 100dvh;
+    min-height: 100dvh;
+    max-height: 100dvh;
+    align-items: stretch;
+    justify-content: center;
+    padding: 5.2rem 5vw 1.2rem;
+    overflow: hidden;
+  }
+
+  body.home .category-card {
+    aspect-ratio: auto;
+    height: 100%;
+    min-height: 0;
+  }
+
+  body.home .category-card-name {
+    font-size: 1rem;
+    letter-spacing: 0.14em;
+    padding: 0.7rem 0.6rem;
   }
 
   .site-header {
@@ -792,5 +848,34 @@ button[type="submit"]:hover {
 @media (max-width: 560px) {
   .category-card {
     aspect-ratio: 2 / 1;
+  }
+
+  body.home .site-header {
+    padding: 0.75rem 4.5vw;
+  }
+
+  body.home .wordmark {
+    font-size: 1.18rem;
+  }
+
+  body.home .home-hero {
+    padding: 4.4rem 4.5vw 0.9rem;
+  }
+
+  body.home .categories {
+    width: 92vw;
+  }
+
+  body.home .category-grid {
+    gap: 0.38rem;
+  }
+
+  body.home .category-card {
+    aspect-ratio: auto;
+  }
+
+  body.home .category-card-name {
+    font-size: 0.82rem;
+    padding: 0.45rem 0.4rem;
   }
 }
