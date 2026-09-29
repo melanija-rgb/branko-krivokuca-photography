@@ -252,7 +252,7 @@ function revealTiles() {
         observer.unobserve(entry.target);
       });
     },
-    { threshold: 0.28 }
+    { rootMargin: "0px 0px -18% 0px", threshold: 0.2 }
   );
   tiles.forEach((tile) => observer.observe(tile));
 }
