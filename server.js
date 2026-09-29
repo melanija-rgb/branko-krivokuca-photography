@@ -11,7 +11,7 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "branko-studio";
 const SESSION_SECRET = process.env.SESSION_SECRET || "krivokuca-local-session";
 const COOKIE_NAME = "bk_admin";
 const COOKIE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
-const CATEGORIES = ["landscape", "architecture", "portraits"];
+const CATEGORIES = ["landscape", "architecture", "wildlife", "people"];
 
 const ROOT = __dirname;
 const PUBLIC_DIR = path.join(ROOT, "public");
@@ -120,7 +120,7 @@ app.post("/api/photos", requireAdmin, (req, res) => {
 
     const category = normalizeCategory(req.body.category);
     if (!category) {
-      return res.status(400).json({ error: "Choose Landscape, Architecture, or Portraits." });
+      return res.status(400).json({ error: "Choose Landscape, Architecture, Wildlife, or People." });
     }
 
     const photos = readJson(PHOTOS_FILE);
@@ -135,6 +135,33 @@ app.post("/api/photos", requireAdmin, (req, res) => {
     writeJson(PHOTOS_FILE, photos);
     res.status(201).json(photo);
   });
+});
+
+app.patch("/api/photos/:id", requireAdmin, (req, res) => {
+  const category = normalizeCategory(req.body.category);
+  if (!category) {
+    return res.status(400).json({ error: "Choose Landscape, Architecture, Wildlife, or People." });
+  }
+
+  const photos = readJson(PHOTOS_FILE);
+  let photo = photos.find((entry) => entry.id === req.params.id);
+  if (!photo) {
+    const src = cleanSrc(req.body.src);
+    if (!src) return res.status(404).json({ error: "Photo not found." });
+    photo = {
+      id: req.params.id,
+      title: cleanText(req.body.title, 80) || "Untitled",
+      category,
+      src,
+      createdAt: new Date().toISOString(),
+    };
+    photos.unshift(photo);
+  } else {
+    photo.category = category;
+  }
+
+  writeJson(PHOTOS_FILE, photos);
+  res.json(normalizePhoto(photo));
 });
 
 app.delete("/api/photos/:id", requireAdmin, (req, res) => {
@@ -225,7 +252,14 @@ function normalizeCategory(value) {
   const category = String(value || "")
     .trim()
     .toLowerCase();
+  if (category === "portraits") return "people";
   return CATEGORIES.includes(category) ? category : "";
+}
+
+function cleanSrc(value) {
+  const src = String(value || "").trim();
+  if (!src.startsWith("/images/") || src.includes("..")) return "";
+  return src.slice(0, 240);
 }
 
 function cleanText(value, max) {

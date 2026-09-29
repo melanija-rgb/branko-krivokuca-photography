@@ -1,9 +1,9 @@
 const crypto = require("crypto");
 const { connectLambda } = require("@netlify/blobs");
 const { json, optionsResponse, parseBody, isAdmin, corsHeaders } = require("../lib/admin-auth");
-const { useEvent, listPhotos, listRemoved, addPhoto, getPhotoFile, deletePhoto } = require("../lib/photos-store");
+const { useEvent, listPhotos, listRemoved, addPhoto, getPhotoFile, setPhotoCategory, deletePhoto } = require("../lib/photos-store");
 
-const CATEGORIES = ["landscape", "architecture", "portraits"];
+const CATEGORIES = ["landscape", "architecture", "wildlife", "people"];
 const ALLOWED_MIME = {
   "image/jpeg": true,
   "image/jpg": true,
@@ -36,6 +36,10 @@ exports.handler = async (event) => {
   }
 
   const itemMatch = path.match(/\/photos\/([^/]+)\/?$/);
+  if (method === "PATCH" && itemMatch) {
+    return updatePhoto(event, decodeURIComponent(itemMatch[1]));
+  }
+
   if (method === "DELETE" && itemMatch) {
     return removePhoto(event, decodeURIComponent(itemMatch[1]));
   }
@@ -47,9 +51,9 @@ async function uploadPhoto(event) {
   if (!isAdmin(event)) return json(401, { error: "Please sign in." }, {}, event);
 
   const data = parseBody(event);
-  const category = CATEGORIES.includes(data.category) ? data.category : "";
+  const category = normalizeCategory(data.category);
   if (!category) {
-    return json(400, { error: "Choose Landscape, Architecture, or Portraits." }, {}, event);
+    return json(400, { error: "Choose Landscape, Architecture, Wildlife, or People." }, {}, event);
   }
 
   const mime = String(data.mime || "").toLowerCase();
@@ -90,6 +94,25 @@ async function serveFile(event, id) {
   };
 }
 
+async function updatePhoto(event, id) {
+  if (!isAdmin(event)) return json(401, { error: "Please sign in." }, {}, event);
+
+  const data = parseBody(event);
+  const category = normalizeCategory(data.category);
+  if (!category) {
+    return json(400, { error: "Choose Landscape, Architecture, Wildlife, or People." }, {}, event);
+  }
+
+  const photo = await setPhotoCategory({
+    id,
+    category,
+    title: cleanText(data.title, 80) || "Untitled",
+    src: cleanSrc(data.src),
+  });
+  if (!photo) return json(404, { error: "Photo not found." }, {}, event);
+  return json(200, photo, {}, event);
+}
+
 async function removePhoto(event, id) {
   if (!isAdmin(event)) return json(401, { error: "Please sign in." }, {}, event);
   const removed = await deletePhoto(id);
@@ -121,6 +144,18 @@ function decodeImage(value) {
   } catch {
     return null;
   }
+}
+
+function normalizeCategory(value) {
+  const category = String(value || "").trim().toLowerCase();
+  if (category === "portraits") return "people";
+  return CATEGORIES.includes(category) ? category : "";
+}
+
+function cleanSrc(value) {
+  const src = String(value || "").trim();
+  if (!src.startsWith("/images/") || src.includes("..")) return "";
+  return src.slice(0, 240);
 }
 
 function cleanText(value, max) {

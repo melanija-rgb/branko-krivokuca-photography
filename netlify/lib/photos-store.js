@@ -90,6 +90,45 @@ async function getPhotoFile(id) {
   return { meta, buffer: Buffer.from(data) };
 }
 
+async function setPhotoCategory({ id, category, title, src }) {
+  const removed = await listRemoved();
+  if (removed.includes(id)) return null;
+
+  const s = store();
+  const items = (await s.get(INDEX_KEY, { type: "json" })) || [];
+  const list = Array.isArray(items) ? items : [];
+  const index = list.findIndex((photo) => photo && photo.id === id);
+
+  if (index >= 0) {
+    const next = { ...list[index], category };
+    list[index] = next;
+    await s.setJSON(INDEX_KEY, list);
+    const meta = await s.get(metaKey(id), { type: "json" });
+    if (meta) await s.setJSON(metaKey(id), { ...meta, category });
+    return next;
+  }
+
+  const existing = await s.get(metaKey(id), { type: "json" });
+  if (existing && existing.id) {
+    const next = { ...existing, category };
+    await s.setJSON(metaKey(id), next);
+    await s.setJSON(INDEX_KEY, [next, ...list]);
+    return next;
+  }
+
+  if (!src) return null;
+  const photo = {
+    id,
+    title: title || "Untitled",
+    category,
+    src,
+    createdAt: new Date().toISOString(),
+  };
+  await s.setJSON(metaKey(id), photo);
+  await s.setJSON(INDEX_KEY, [photo, ...list]);
+  return photo;
+}
+
 async function deletePhoto(id) {
   const s = store();
   const items = (await s.get(INDEX_KEY, { type: "json" })) || [];
@@ -113,5 +152,6 @@ module.exports = {
   listRemoved,
   addPhoto,
   getPhotoFile,
+  setPhotoCategory,
   deletePhoto,
 };

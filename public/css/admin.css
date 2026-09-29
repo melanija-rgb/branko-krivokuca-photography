@@ -242,11 +242,21 @@ button.ghost,
 
 .admin-gallery figcaption {
   display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.55rem;
   padding: 0.55rem 0.6rem 0.7rem;
   font-size: 0.78rem;
   color: var(--muted);
+}
+
+.admin-gallery select {
+  width: auto;
+  flex: 1;
+  min-width: 0;
+  padding: 0.4rem 0.45rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
 }
 
 .empty {

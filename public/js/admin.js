@@ -13,6 +13,13 @@ const adminGallery = document.querySelector("#admin-gallery");
 const uploadForm = document.querySelector("#upload-form");
 const uploadStatus = document.querySelector("#upload-status");
 
+const GALLERIES = [
+  { id: "landscape", label: "Landscape" },
+  { id: "architecture", label: "Architecture" },
+  { id: "wildlife", label: "Wildlife" },
+  { id: "people", label: "People" },
+];
+
 boot();
 
 loginForm.addEventListener("submit", async (event) => {
@@ -105,11 +112,45 @@ inbox.addEventListener("click", async (event) => {
 adminGallery.addEventListener("click", async (event) => {
   const button = event.target.closest("button[data-photo-id]");
   if (!button) return;
-  await fetch(liveApi(`/api/photos/${button.dataset.photoId}`), {
+  await fetch(liveApi(`/api/photos/${encodeURIComponent(button.dataset.photoId)}`), {
     method: "DELETE",
     credentials: "include",
   });
   loadPhotos();
+});
+
+adminGallery.addEventListener("focusin", (event) => {
+  const select = event.target.closest("select[data-move-id]");
+  if (select) select.dataset.prev = select.value;
+});
+
+adminGallery.addEventListener("change", async (event) => {
+  const select = event.target.closest("select[data-move-id]");
+  if (!select) return;
+  const previous = select.dataset.prev || "";
+  select.disabled = true;
+  try {
+    const response = await fetch(liveApi(`/api/photos/${encodeURIComponent(select.dataset.moveId)}`), {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        category: select.value,
+        title: select.dataset.title || "",
+        src: select.dataset.src || "",
+      }),
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(payload.error || "Could not update the gallery.");
+    uploadStatus.classList.remove("error");
+    uploadStatus.textContent = "Gallery updated.";
+    loadPhotos();
+  } catch (error) {
+    if (previous) select.value = previous;
+    select.disabled = false;
+    uploadStatus.classList.add("error");
+    uploadStatus.textContent = error.message || "Could not update the gallery.";
+  }
 });
 
 async function boot() {
@@ -164,15 +205,9 @@ async function loadInquiries() {
 async function loadPhotos() {
   const photos = await fetchPhotoList();
   if (!Array.isArray(photos)) return;
-  const groups = [
-    { id: "landscape", label: "Landscape" },
-    { id: "architecture", label: "Architecture" },
-    { id: "portraits", label: "Portraits" },
-  ];
-
-  adminGallery.innerHTML = groups
+  adminGallery.innerHTML = GALLERIES
     .map(({ id, label }) => {
-      const items = photos.filter((photo) => photo.category === id);
+      const items = photos.filter((photo) => photoCategory(photo) === id);
       const body = items.length
         ? `<div class="admin-gallery-grid">${items.map(photoFigure).join("")}</div>`
         : `<p class="empty">No photographs in this series yet.</p>`;
@@ -186,13 +221,40 @@ async function fetchPhotoList() {
     fetchCatalog(liveApi("/api/photos")),
     fetchJson("/photos.json"),
   ]);
-  const removed = new Set(catalog.removed);
+  return mergePhotos(builtIn, catalog.photos, new Set(catalog.removed));
+}
+
+function photoCategory(photo) {
+  if (!photo) return "";
+  return photo.category === "portraits" ? "people" : photo.category;
+}
+
+function mergePhotos(builtIns, uploaded, removed) {
+  const builtInIds = new Set(builtIns.map((photo) => photo && photo.id).filter(Boolean));
+  const overrides = new Map();
+  const uploadedOnly = [];
+  for (const photo of uploaded) {
+    if (!photo || !photo.id || removed.has(photo.id)) continue;
+    if (builtInIds.has(photo.id)) overrides.set(photo.id, photo);
+    else uploadedOnly.push(photo);
+  }
+
   const seen = new Set();
   const merged = [];
-  for (const photo of [...catalog.photos, ...builtIn]) {
-    if (!photo || !photo.id || seen.has(photo.id) || removed.has(photo.id)) continue;
+  for (const photo of uploadedOnly) {
+    if (seen.has(photo.id)) continue;
     seen.add(photo.id);
     merged.push(photo);
+  }
+  for (const photo of builtIns) {
+    if (!photo || !photo.id || removed.has(photo.id) || seen.has(photo.id)) continue;
+    seen.add(photo.id);
+    const override = overrides.get(photo.id);
+    merged.push(
+      override
+        ? { ...photo, ...override, src: photo.src, category: override.category || photo.category }
+        : photo
+    );
   }
   return merged;
 }
@@ -224,11 +286,19 @@ async function fetchJson(url) {
 }
 
 function photoFigure(photo) {
+  const category = photoCategory(photo);
+  const options = GALLERIES.map(({ id, label }) => {
+    const selected = id === category ? " selected" : "";
+    return `<option value="${id}"${selected}>${label}</option>`;
+  }).join("");
   return `
     <figure>
       <img src="${escapeAttr(photoSrc(photo.src))}" alt="" />
       <figcaption>
-        <button class="ghost" type="button" data-photo-id="${photo.id}">Remove</button>
+        <select aria-label="Gallery" data-move-id="${escapeAttr(photo.id)}" data-title="${escapeAttr(photo.title || "")}" data-src="${escapeAttr(photo.src || "")}">
+          ${options}
+        </select>
+        <button class="ghost" type="button" data-photo-id="${escapeAttr(photo.id)}">Remove</button>
       </figcaption>
     </figure>
   `;
