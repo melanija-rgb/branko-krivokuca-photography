@@ -11,7 +11,7 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "branko-studio";
 const SESSION_SECRET = process.env.SESSION_SECRET || "krivokuca-local-session";
 const COOKIE_NAME = "bk_admin";
 const COOKIE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
-const CATEGORIES = ["landscape", "architecture", "portraits"];
+const CATEGORIES = ["landscape", "architecture", "wildlife", "people", "portraits"];
 
 const ROOT = __dirname;
 const PUBLIC_DIR = path.join(ROOT, "public");
@@ -161,6 +161,14 @@ app.get("/admin", (_req, res) => {
   res.sendFile(path.join(PUBLIC_DIR, "admin.html"));
 });
 
+app.get("/gallery/:category", (req, res) => {
+  const category = String(req.params.category || "").toLowerCase();
+  if (!["landscape", "architecture", "wildlife", "people"].includes(category)) {
+    return res.redirect("/");
+  }
+  res.sendFile(path.join(PUBLIC_DIR, "gallery.html"));
+});
+
 app.listen(PORT, () => {
   console.log(`Branko Krivokuca site running at http://localhost:${PORT}`);
 });
@@ -225,7 +233,8 @@ function normalizeCategory(value) {
   const category = String(value || "")
     .trim()
     .toLowerCase();
-  return CATEGORIES.includes(category) ? category : "";
+  if (category === "portraits") return "people";
+  return ["landscape", "architecture", "wildlife", "people"].includes(category) ? category : "";
 }
 
 function cleanText(value, max) {

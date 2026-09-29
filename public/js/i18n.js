@@ -7,13 +7,15 @@ const I18N = {
     gallery: "Gallery",
     landscape: "Landscape",
     architecture: "Architecture",
-    portraits: "Portraits",
+    wildlife: "Wildlife",
+    people: "People",
+    portraits: "People",
     social: "Social",
     contact: "Contact",
     photographer: "Photographer",
     headline: "Landscape and nature photographer.",
     roles: "Climber · Mountaineer",
-    lede: "Prints available. Work is shown in three series below.",
+    lede: "Prints available. Work is shown in four series below.",
     series: "Series",
     connect: "Connect",
     socialMedia: "Social media",
@@ -35,6 +37,8 @@ const I18N = {
     factDm: "📩 For photography services, send a DM",
     emptyLandscape: "Landscape photographs will appear here.",
     emptyArchitecture: "Architecture photographs will appear here.",
+    emptyWildlife: "Wildlife photographs will appear here.",
+    emptyPeople: "Portraits will appear here.",
     emptyPortraits: "Portraits will appear here.",
     galleryError: "The gallery could not be loaded.",
     close: "Close",
@@ -51,13 +55,15 @@ const I18N = {
     gallery: "Galerija",
     landscape: "Pejzaž",
     architecture: "Arhitektura",
-    portraits: "Portreti",
+    wildlife: "Divljač",
+    people: "Ljudi",
+    portraits: "Ljudi",
     social: "Društvene",
     contact: "Kontakt",
     photographer: "Fotograf",
     headline: "Fotograf pejzaža i prirode.",
     roles: "Penjač · Planinar",
-    lede: "Printovi su dostupni. Radovi su prikazani u tri serije ispod.",
+    lede: "Printovi su dostupni. Radovi su prikazani u četiri serije ispod.",
     series: "Serija",
     connect: "Poveži se",
     socialMedia: "Društvene mreže",
@@ -79,6 +85,8 @@ const I18N = {
     factDm: "📩 Za usluge fotografisanja javite se u DM",
     emptyLandscape: "Ovdje će se pojaviti pejzažne fotografije.",
     emptyArchitecture: "Ovdje će se pojaviti arhitektonske fotografije.",
+    emptyWildlife: "Ovdje će se pojaviti fotografije divljači.",
+    emptyPeople: "Ovdje će se pojaviti portreti.",
     emptyPortraits: "Ovdje će se pojaviti portreti.",
     galleryError: "Galerija se nije mogla učitati.",
     close: "Zatvori",
@@ -129,6 +137,12 @@ function applyLanguage(lang) {
 
   window.dispatchEvent(new Event("bk-lang"));
 }
+
+window.addEventListener("bk-lang", () => {
+  const galleryTitle = document.querySelector("#gallery-title[data-i18n]");
+  if (!galleryTitle) return;
+  document.title = `${t(galleryTitle.dataset.i18n)} — Branko Krivokuca`;
+});
 
 document.querySelectorAll(".lang-switch [data-lang]").forEach((btn) => {
   btn.addEventListener("click", () => applyLanguage(btn.dataset.lang));

@@ -1,4 +1,10 @@
 const LIVE_API = "https://branko-krivokuca-photography.netlify.app";
+const GALLERY_CATEGORIES = {
+  landscape: { emptyKey: "emptyLandscape", columns: "2" },
+  architecture: { emptyKey: "emptyArchitecture", columns: "2" },
+  wildlife: { emptyKey: "emptyWildlife", columns: "2" },
+  people: { emptyKey: "emptyPeople", columns: "3" },
+};
 
 function liveApi(path) {
   return LIVE_API + path;
@@ -7,90 +13,116 @@ function liveApi(path) {
 const form = document.querySelector("#contact-form");
 const statusEl = document.querySelector("#form-status");
 const lightbox = document.querySelector("#lightbox");
-const lightboxImage = lightbox.querySelector("img");
-const series = [
-  { id: "landscape", emptyKey: "emptyLandscape" },
-  { id: "architecture", emptyKey: "emptyArchitecture" },
-  { id: "portraits", emptyKey: "emptyPortraits" },
-];
-
-loadGallery();
-
+const lightboxImage = lightbox ? lightbox.querySelector("img") : null;
 const header = document.querySelector(".site-header");
 const menuToggle = document.querySelector(".menu-toggle");
 const siteNav = document.querySelector("#site-nav");
+const pageGallery = document.querySelector("#category-gallery");
 
-menuToggle.addEventListener("click", () => {
-  const open = header.classList.toggle("is-open");
-  menuToggle.setAttribute("aria-expanded", String(open));
-  menuToggle.setAttribute("aria-label", t(open ? "closeMenu" : "openMenu"));
-});
+if (pageGallery) {
+  loadCategoryPage();
+}
 
-siteNav.addEventListener("click", (event) => {
-  if (!event.target.closest("a")) return;
-  header.classList.remove("is-open");
-  menuToggle.setAttribute("aria-expanded", "false");
-  menuToggle.setAttribute("aria-label", t("openMenu"));
-});
+if (menuToggle && header && siteNav) {
+  menuToggle.addEventListener("click", () => {
+    const open = header.classList.toggle("is-open");
+    menuToggle.setAttribute("aria-expanded", String(open));
+    menuToggle.setAttribute("aria-label", t(open ? "closeMenu" : "openMenu"));
+  });
 
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  statusEl.classList.remove("error");
-  statusEl.textContent = t("sending");
+  siteNav.addEventListener("click", (event) => {
+    if (!event.target.closest("a")) return;
+    header.classList.remove("is-open");
+    menuToggle.setAttribute("aria-expanded", "false");
+    menuToggle.setAttribute("aria-label", t("openMenu"));
+  });
+}
 
-  const data = Object.fromEntries(new FormData(form).entries());
+if (form && statusEl) {
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    statusEl.classList.remove("error");
+    statusEl.textContent = t("sending");
 
-  try {
-    const response = await fetch(liveApi("/api/inquiries"), {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(data),
-    });
-    const payload = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(payload.error || t("sendError"));
+    const data = Object.fromEntries(new FormData(form).entries());
 
-    form.reset();
-    statusEl.textContent = t("thankYou");
-  } catch (error) {
-    statusEl.classList.add("error");
-    statusEl.textContent = error.message;
-  }
-});
+    try {
+      const response = await fetch(liveApi("/api/inquiries"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(data),
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(payload.error || t("sendError"));
 
-document.querySelector("main").addEventListener("click", (event) => {
-  const button = event.target.closest(".gallery button[data-src]");
-  if (!button) return;
-  lightboxImage.src = button.dataset.src;
-  lightboxImage.alt = button.dataset.title || "";
-  lightbox.showModal();
-});
+      form.reset();
+      statusEl.textContent = t("thankYou");
+    } catch (error) {
+      statusEl.classList.add("error");
+      statusEl.textContent = error.message;
+    }
+  });
+}
+
+if (lightbox && lightboxImage) {
+  document.addEventListener("click", (event) => {
+    const button = event.target.closest(".gallery button[data-src]");
+    if (!button) return;
+    lightboxImage.src = button.dataset.src;
+    lightboxImage.alt = button.dataset.title || "";
+    lightbox.showModal();
+  });
+}
 
 document.addEventListener("contextmenu", (event) => {
-  if (event.target.closest(".gallery, .lightbox")) event.preventDefault();
+  if (event.target.closest(".gallery, .lightbox, .category-card")) event.preventDefault();
 });
 
 document.addEventListener("dragstart", (event) => {
-  if (event.target.closest(".gallery, .lightbox")) event.preventDefault();
+  if (event.target.closest(".gallery, .lightbox, .category-card")) event.preventDefault();
 });
 
-async function loadGallery() {
+function categoryFromPath() {
+  const match = location.pathname.match(/\/gallery\/([^/]+)\/?$/);
+  return match ? match[1] : "";
+}
+
+function photoCategory(photo) {
+  return photo.category === "portraits" ? "people" : photo.category;
+}
+
+async function loadCategoryPage() {
+  const id = categoryFromPath();
+  const meta = GALLERY_CATEGORIES[id];
+  if (!meta) {
+    location.replace("/");
+    return;
+  }
+
+  pageGallery.dataset.category = id;
+  pageGallery.dataset.columns = meta.columns;
+  const titleEl = document.querySelector("#gallery-title");
+  if (titleEl) {
+    titleEl.dataset.i18n = id;
+    titleEl.textContent = t(id);
+  }
+  document.title = `${t(id)} — Branko Krivokuca`;
+  document.querySelectorAll("#site-nav a[href^='/gallery/']").forEach((link) => {
+    if (link.getAttribute("href") === `/gallery/${id}`) link.setAttribute("aria-current", "page");
+    else link.removeAttribute("aria-current");
+  });
+
   try {
     const photos = await loadPhotos();
-    series.forEach(({ id, emptyKey }) => {
-      const gallery = document.querySelector(`#${id} .gallery`);
-      const items = photos.filter((photo) => photo.category === id);
-      if (!items.length) {
-        gallery.innerHTML = `<p class="gallery-empty" data-i18n-empty="${emptyKey}">${t(emptyKey)}</p>`;
-        return;
-      }
-      gallery.innerHTML = items.map(photoCard).join("");
-    });
+    const items = photos.filter((photo) => photoCategory(photo) === id);
+    if (!items.length) {
+      pageGallery.innerHTML = `<p class="gallery-empty" data-i18n-empty="${meta.emptyKey}">${t(meta.emptyKey)}</p>`;
+      return;
+    }
+    pageGallery.innerHTML = items.map(photoCard).join("");
   } catch {
-    series.forEach(({ id }) => {
-      const gallery = document.querySelector(`#${id} .gallery`);
-      gallery.innerHTML = `<p class="gallery-empty" data-i18n-empty="galleryError">${t("galleryError")}</p>`;
-    });
+    pageGallery.innerHTML = `<p class="gallery-empty" data-i18n-empty="galleryError">${t("galleryError")}</p>`;
   }
 }
 

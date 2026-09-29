@@ -80,19 +80,19 @@
   {
     "id": "landscape-eagle",
     "title": "Eagle",
-    "category": "landscape",
+    "category": "wildlife",
     "src": "/images/landscape-eagle.png"
   },
   {
     "id": "landscape-mallard",
     "title": "Mallard",
-    "category": "landscape",
+    "category": "wildlife",
     "src": "/images/landscape-mallard.jpg"
   },
   {
     "id": "landscape-deer",
     "title": "Deer",
-    "category": "landscape",
+    "category": "wildlife",
     "src": "/images/landscape-deer.png"
   },
   {
@@ -170,49 +170,49 @@
   {
     "id": "portrait-daisy",
     "title": "Portrait",
-    "category": "portraits",
+    "category": "people",
     "src": "/images/portrait-daisy.png"
   },
   {
     "id": "portrait-fan",
     "title": "Portrait",
-    "category": "portraits",
+    "category": "people",
     "src": "/images/portrait-fan.png"
   },
   {
     "id": "portrait-sunflower",
     "title": "Portrait",
-    "category": "portraits",
+    "category": "people",
     "src": "/images/portrait-sunflower.png"
   },
   {
     "id": "portrait-eyes-bw",
     "title": "Portrait",
-    "category": "portraits",
+    "category": "people",
     "src": "/images/portrait-eyes-bw.png"
   },
   {
     "id": "portrait-fans-poppies",
     "title": "Portrait",
-    "category": "portraits",
+    "category": "people",
     "src": "/images/portrait-fans-poppies.png"
   },
   {
     "id": "portrait-moss",
     "title": "Portrait",
-    "category": "portraits",
+    "category": "people",
     "src": "/images/portrait-moss.jpg"
   },
   {
     "id": "portrait-meadow",
     "title": "Portrait",
-    "category": "portraits",
+    "category": "people",
     "src": "/images/portrait-meadow.jpg"
   },
   {
     "id": "portrait-blue-liner",
     "title": "Portrait",
-    "category": "portraits",
+    "category": "people",
     "src": "/images/portrait-blue-liner.jpg"
   }
 ]

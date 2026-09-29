@@ -167,12 +167,15 @@ async function loadPhotos() {
   const groups = [
     { id: "landscape", label: "Landscape" },
     { id: "architecture", label: "Architecture" },
-    { id: "portraits", label: "Portraits" },
+    { id: "wildlife", label: "Wildlife" },
+    { id: "people", label: "People" },
   ];
 
   adminGallery.innerHTML = groups
     .map(({ id, label }) => {
-      const items = photos.filter((photo) => photo.category === id);
+      const items = photos.filter(
+        (photo) => photo.category === id || (id === "people" && photo.category === "portraits")
+      );
       const body = items.length
         ? `<div class="admin-gallery-grid">${items.map(photoFigure).join("")}</div>`
         : `<p class="empty">No photographs in this series yet.</p>`;

@@ -3,7 +3,7 @@ const { connectLambda } = require("@netlify/blobs");
 const { json, optionsResponse, parseBody, isAdmin, corsHeaders } = require("../lib/admin-auth");
 const { useEvent, listPhotos, listRemoved, addPhoto, getPhotoFile, deletePhoto } = require("../lib/photos-store");
 
-const CATEGORIES = ["landscape", "architecture", "portraits"];
+const CATEGORIES = ["landscape", "architecture", "wildlife", "people", "portraits"];
 const ALLOWED_MIME = {
   "image/jpeg": true,
   "image/jpg": true,
@@ -47,9 +47,9 @@ async function uploadPhoto(event) {
   if (!isAdmin(event)) return json(401, { error: "Please sign in." }, {}, event);
 
   const data = parseBody(event);
-  const category = CATEGORIES.includes(data.category) ? data.category : "";
+  const category = normalizeUploadCategory(data.category);
   if (!category) {
-    return json(400, { error: "Choose Landscape, Architecture, or Portraits." }, {}, event);
+    return json(400, { error: "Choose Landscape, Architecture, Wildlife, or People." }, {}, event);
   }
 
   const mime = String(data.mime || "").toLowerCase();
@@ -128,4 +128,13 @@ function cleanText(value, max) {
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, max);
+}
+
+function normalizeUploadCategory(value) {
+  const category = String(value || "")
+    .trim()
+    .toLowerCase();
+  if (category === "portraits") return "people";
+  if (["landscape", "architecture", "wildlife", "people"].includes(category)) return category;
+  return "";
 }
