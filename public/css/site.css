@@ -52,11 +52,28 @@ img {
 }
 
 .wordmark {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  margin-right: auto;
+  line-height: 1.05;
+}
+
+.wordmark-name {
   font-family: "Cormorant Garamond", Georgia, serif;
   font-size: clamp(1.45rem, 2.4vw, 2rem);
   font-weight: 500;
   letter-spacing: 0.02em;
-  margin-right: auto;
+}
+
+.wordmark-role {
+  font-family: Manrope, system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  line-height: 1.2;
 }
 
 nav {
@@ -208,7 +225,11 @@ h2 {
 }
 
 .galleries {
-  padding-bottom: 4.5rem;
+  padding: 2.75rem 0 4.5rem;
+}
+
+.gallery-view {
+  padding-top: 2.5rem;
 }
 
 .category-grid {
@@ -369,12 +390,43 @@ h2 {
   flex-shrink: 0;
 }
 
-.contact {
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  gap: 3rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--line);
+.sheet-dialog {
+  position: relative;
+  width: min(36rem, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  margin: auto;
+  padding: 1.5rem 1.4rem 1.4rem;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--ink);
+  overflow: auto;
+}
+
+.sheet-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.72);
+}
+
+.sheet-dialog .section-head {
+  padding-right: 4.5rem;
+}
+
+.dialog-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 0.35rem;
+}
+
+.dialog-close:hover {
+  color: var(--accent);
 }
 
 .honeypot {

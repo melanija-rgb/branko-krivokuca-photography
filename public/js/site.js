@@ -6,6 +6,8 @@ function liveApi(path) {
 
 const form = document.querySelector("#contact-form");
 const statusEl = document.querySelector("#form-status");
+const contactDialog = document.querySelector("#contact-dialog");
+const socialDialog = document.querySelector("#social-dialog");
 const lightbox = document.querySelector("#lightbox");
 const lightboxImage = lightbox.querySelector("img");
 const categoryGrid = document.querySelector("#category-grid");
@@ -37,11 +39,27 @@ menuToggle.addEventListener("click", () => {
 });
 
 siteNav.addEventListener("click", (event) => {
-  if (!event.target.closest("a")) return;
+  const link = event.target.closest("a");
+  if (!link) return;
   header.classList.remove("is-open");
   menuToggle.setAttribute("aria-expanded", "false");
   menuToggle.setAttribute("aria-label", t("openMenu"));
+  const href = link.getAttribute("href");
+  if (href === "#contact" || href === "#social") {
+    event.preventDefault();
+    openSheet(href === "#contact" ? contactDialog : socialDialog);
+  }
 });
+
+document.querySelectorAll(".sheet-dialog").forEach((dialog) => {
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+  dialog.querySelector(".dialog-close").addEventListener("click", () => dialog.close());
+});
+
+if (location.hash === "#contact") openSheet(contactDialog);
+if (location.hash === "#social") openSheet(socialDialog);
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -84,7 +102,24 @@ document.addEventListener("dragstart", (event) => {
   if (event.target.closest(".gallery, .lightbox, .category-tile")) event.preventDefault();
 });
 
-window.addEventListener("hashchange", () => showView(true));
+window.addEventListener("hashchange", () => {
+  if (location.hash === "#contact") {
+    openSheet(contactDialog);
+    return;
+  }
+  if (location.hash === "#social") {
+    openSheet(socialDialog);
+    return;
+  }
+  showView(true);
+});
+
+function openSheet(dialog) {
+  [contactDialog, socialDialog].forEach((other) => {
+    if (other !== dialog && other.open) other.close();
+  });
+  if (!dialog.open) dialog.showModal();
+}
 
 async function loadGallery() {
   try {

@@ -22,11 +22,14 @@
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/css/site.css?v=11" />
+    <link rel="stylesheet" href="/css/site.css?v=12" />
   </head>
   <body>
     <header class="site-header">
-      <a class="wordmark" href="#top">Branko Krivokuca</a>
+      <a class="wordmark" href="#top">
+        <span class="wordmark-name">Branko Krivokuća</span>
+        <span class="wordmark-role" data-i18n="photographer">Photographer</span>
+      </a>
       <nav id="site-nav">
         <a class="nav-mobile-only" href="#galleries" data-i18n="gallery">Gallery</a>
         <a class="nav-desktop-only" href="#landscape" data-gallery="landscape" data-i18n="landscape">Landscape</a>
@@ -72,18 +75,7 @@
     </header>
 
     <main id="top">
-      <section class="intro">
-        <p class="eyebrow" data-i18n="photographer">Photographer</p>
-        <h1 data-i18n="headline">Landscape and nature photographer.</h1>
-        <p class="roles" data-i18n="roles">Climber · Mountaineer</p>
-        <p class="lede" data-i18n="lede">Prints available. Work is shown in four galleries below.</p>
-      </section>
-
       <section id="galleries" class="galleries">
-        <div class="section-head">
-          <p class="eyebrow" data-i18n="galleries">Galleries</p>
-          <h2 data-i18n="gallery">Gallery</h2>
-        </div>
         <div id="category-grid" class="category-grid"></div>
       </section>
 
@@ -97,93 +89,6 @@
         <div class="gallery" aria-live="polite"></div>
       </section>
 
-      <section id="social" class="social">
-        <div class="section-head">
-          <p class="eyebrow" data-i18n="connect">Connect</p>
-          <h2 data-i18n="socialMedia">Social media</h2>
-        </div>
-        <div class="instagram-links">
-          <a
-            href="https://www.instagram.com/branko_krivokuca/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.6" />
-              <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.6" />
-              <circle cx="17.4" cy="6.6" r="1.15" fill="currentColor" />
-            </svg>
-            <span>@branko_krivokuca</span>
-          </a>
-          <a
-            href="https://www.instagram.com/__fokusiran__/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.6" />
-              <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.6" />
-              <circle cx="17.4" cy="6.6" r="1.15" fill="currentColor" />
-            </svg>
-            <span>@__fokusiran__</span>
-          </a>
-        </div>
-      </section>
-
-      <section id="contact" class="contact">
-        <div class="section-head">
-          <h2 data-i18n="contact">Contact</h2>
-          <p data-i18n="contactIntro">
-            If you would like to book a session, order a print, or discuss a
-            project, write to Branko here.
-          </p>
-        </div>
-
-        <form
-          id="contact-form"
-          class="contact-form"
-          name="contact"
-          method="POST"
-          action="/thanks.html"
-          data-netlify="true"
-          netlify-honeypot="bot-field"
-        >
-          <input type="hidden" name="form-name" value="contact" />
-          <p class="honeypot">
-            <label>
-              <span data-i18n="honeypot">Don’t fill this</span>
-              <input name="bot-field" autocomplete="off" tabindex="-1" />
-            </label>
-          </p>
-          <div class="row">
-            <label>
-              <span data-i18n="firstName">First name</span>
-              <input type="text" name="firstName" autocomplete="given-name" required maxlength="60" />
-            </label>
-            <label>
-              <span data-i18n="lastName">Last name</span>
-              <input type="text" name="lastName" autocomplete="family-name" required maxlength="60" />
-            </label>
-          </div>
-          <label>
-            <span data-i18n="email">Email</span>
-            <input type="email" name="email" autocomplete="email" required />
-          </label>
-          <label>
-            <span data-i18n="whatWouldYouLike">What would you like?</span>
-            <textarea
-              name="message"
-              rows="6"
-              required
-              maxlength="4000"
-              data-i18n-placeholder="messagePlaceholder"
-              placeholder="Tell Branko about the service or project you have in mind."
-            ></textarea>
-          </label>
-          <button type="submit" data-i18n="sendMessage">Send message</button>
-          <p id="form-status" class="form-status" role="status"></p>
-        </form>
-      </section>
     </main>
 
     <footer class="site-footer">
@@ -195,6 +100,96 @@
       <p>© Branko Krivokuca</p>
     </footer>
 
+    <dialog id="social-dialog" class="sheet-dialog" aria-labelledby="social-heading">
+      <button type="button" class="dialog-close" data-i18n="close" data-i18n-aria="close" aria-label="Close">Close</button>
+      <div class="section-head">
+        <p class="eyebrow" data-i18n="connect">Connect</p>
+        <h2 id="social-heading" data-i18n="socialMedia">Social media</h2>
+      </div>
+      <div class="instagram-links">
+        <a
+          href="https://www.instagram.com/branko_krivokuca/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.6" />
+            <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.6" />
+            <circle cx="17.4" cy="6.6" r="1.15" fill="currentColor" />
+          </svg>
+          <span>@branko_krivokuca</span>
+        </a>
+        <a
+          href="https://www.instagram.com/__fokusiran__/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.6" />
+            <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.6" />
+            <circle cx="17.4" cy="6.6" r="1.15" fill="currentColor" />
+          </svg>
+          <span>@__fokusiran__</span>
+        </a>
+      </div>
+    </dialog>
+
+    <dialog id="contact-dialog" class="sheet-dialog" aria-labelledby="contact-heading">
+      <button type="button" class="dialog-close" data-i18n="close" data-i18n-aria="close" aria-label="Close">Close</button>
+      <div class="section-head">
+        <h2 id="contact-heading" data-i18n="contact">Contact</h2>
+        <p data-i18n="contactIntro">
+          If you would like to book a session, order a print, or discuss a
+          project, write to Branko here.
+        </p>
+      </div>
+
+      <form
+        id="contact-form"
+        class="contact-form"
+        name="contact"
+        method="POST"
+        action="/thanks.html"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+      >
+        <input type="hidden" name="form-name" value="contact" />
+        <p class="honeypot">
+          <label>
+            <span data-i18n="honeypot">Don’t fill this</span>
+            <input name="bot-field" autocomplete="off" tabindex="-1" />
+          </label>
+        </p>
+        <div class="row">
+          <label>
+            <span data-i18n="firstName">First name</span>
+            <input type="text" name="firstName" autocomplete="given-name" required maxlength="60" />
+          </label>
+          <label>
+            <span data-i18n="lastName">Last name</span>
+            <input type="text" name="lastName" autocomplete="family-name" required maxlength="60" />
+          </label>
+        </div>
+        <label>
+          <span data-i18n="email">Email</span>
+          <input type="email" name="email" autocomplete="email" required />
+        </label>
+        <label>
+          <span data-i18n="whatWouldYouLike">What would you like?</span>
+          <textarea
+            name="message"
+            rows="6"
+            required
+            maxlength="4000"
+            data-i18n-placeholder="messagePlaceholder"
+            placeholder="Tell Branko about the service or project you have in mind."
+          ></textarea>
+        </label>
+        <button type="submit" data-i18n="sendMessage">Send message</button>
+        <p id="form-status" class="form-status" role="status"></p>
+      </form>
+    </dialog>
+
     <dialog id="lightbox" class="lightbox">
       <div class="lightbox-frame">
         <img alt="" draggable="false" />
@@ -203,6 +198,6 @@
     </dialog>
 
     <script src="/js/i18n.js?v=2"></script>
-    <script src="/js/site.js?v=16"></script>
+    <script src="/js/site.js?v=17"></script>
   </body>
 </html>
