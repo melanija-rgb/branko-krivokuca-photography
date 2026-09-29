@@ -31,10 +31,16 @@ if (menuToggle && header && siteNav) {
   });
 
   siteNav.addEventListener("click", (event) => {
-    if (!event.target.closest("a")) return;
+    const link = event.target.closest("a");
+    if (!link) return;
     header.classList.remove("is-open");
     menuToggle.setAttribute("aria-expanded", "false");
     menuToggle.setAttribute("aria-label", t("openMenu"));
+
+    const dialogId = link.dataset.openDialog;
+    if (!dialogId) return;
+    event.preventDefault();
+    document.getElementById(dialogId)?.showModal();
   });
 }
 
@@ -65,6 +71,12 @@ if (form && statusEl) {
   });
 }
 
+document.querySelectorAll(".panel-dialog").forEach((dialog) => {
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+});
+
 if (lightbox && lightboxImage) {
   document.addEventListener("click", (event) => {
     const button = event.target.closest(".gallery button[data-src]");
@@ -76,11 +88,11 @@ if (lightbox && lightboxImage) {
 }
 
 document.addEventListener("contextmenu", (event) => {
-  if (event.target.closest(".gallery, .lightbox, .category-card")) event.preventDefault();
+  if (event.target.closest(".gallery, .lightbox, .category-card, .home-hero")) event.preventDefault();
 });
 
 document.addEventListener("dragstart", (event) => {
-  if (event.target.closest(".gallery, .lightbox, .category-card")) event.preventDefault();
+  if (event.target.closest(".gallery, .lightbox, .category-card, .home-hero")) event.preventDefault();
 });
 
 function categoryFromPath() {
