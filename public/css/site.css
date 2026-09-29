@@ -221,9 +221,9 @@ h2 {
 .category-tile {
   display: grid;
   grid-template-columns: 42% 1fr;
-  width: min(100%, 420px);
-  flex: 1 1 320px;
-  max-width: 460px;
+  flex: 0 0 400px;
+  width: 400px;
+  max-width: 100%;
   color: inherit;
   text-decoration: none;
   background: rgba(239, 236, 230, 0.04);
@@ -537,9 +537,16 @@ button[type="submit"]:hover {
   }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 940px) {
   .category-tile {
     flex-basis: 100%;
+    width: 100%;
+    max-width: 520px;
+  }
+}
+
+@media (max-width: 720px) {
+  .category-tile {
     max-width: none;
   }
 
