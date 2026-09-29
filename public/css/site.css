@@ -212,8 +212,8 @@ h2 {
 }
 
 .category-grid {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 440px));
   justify-content: center;
   gap: 1.35rem 1.5rem;
 }
@@ -221,9 +221,7 @@ h2 {
 .category-tile {
   display: grid;
   grid-template-columns: 42% 1fr;
-  flex: 0 0 400px;
-  width: 400px;
-  max-width: 100%;
+  width: 100%;
   color: inherit;
   text-decoration: none;
   background: rgba(239, 236, 230, 0.04);
@@ -338,6 +336,7 @@ h2 {
 .gallery-empty {
   color: var(--muted);
   padding: 0.4rem 0 1rem;
+  column-span: all;
 }
 
 .social {
@@ -529,27 +528,28 @@ button[type="submit"]:hover {
 
 @media (min-width: 800px) {
   .gallery {
-    grid-template-columns: 1fr 1fr;
+    display: block;
+    columns: 2;
+    column-gap: 0.7rem;
   }
 
   .gallery[data-category="people"] {
-    grid-template-columns: repeat(3, 1fr);
+    columns: 3;
+  }
+
+  .gallery article {
+    break-inside: avoid;
+    margin: 0 0 0.7rem;
   }
 }
 
 @media (max-width: 940px) {
-  .category-tile {
-    flex-basis: 100%;
-    width: 100%;
-    max-width: 520px;
+  .category-grid {
+    grid-template-columns: minmax(0, 520px);
   }
 }
 
 @media (max-width: 720px) {
-  .category-tile {
-    max-width: none;
-  }
-
   .category-tile-label {
     letter-spacing: 0.14em;
     font-size: 0.68rem;
