@@ -924,7 +924,7 @@ button[type="submit"]:hover {
     font-size: 1rem;
     letter-spacing: 0.14em;
     padding: 0.7rem 0.6rem;
-    background: rgba(16, 16, 16, 0.82);
+    background: rgba(32, 32, 32, 0.82);
   }
 
   .site-header {
