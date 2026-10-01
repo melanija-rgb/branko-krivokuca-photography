@@ -119,6 +119,12 @@ body.home main {
   background: #0a0a0a;
 }
 
+.home-hero-picture {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
 .home-hero-image {
   position: absolute;
   inset: -2.5rem;
