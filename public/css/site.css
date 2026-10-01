@@ -955,7 +955,7 @@ button[type="submit"]:hover {
     width: 1.35rem;
     height: 1.5px;
     background: var(--ink);
-    transition: transform 0.2s ease, opacity 0.2s ease;
+    transition: transform 0.4s ease-out, opacity 0.4s ease-out;
   }
 
   .site-header.is-open .menu-toggle span:nth-child(1) {
@@ -971,20 +971,49 @@ button[type="submit"]:hover {
   }
 
   nav {
-    display: none;
+    display: flex;
     flex-direction: column;
+    order: 4;
+    flex-basis: 100%;
     width: 100%;
     gap: 0;
-    padding: 0.4rem 0 0.6rem;
+    max-height: 0;
+    min-height: 0;
+    padding: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-12px);
+    pointer-events: none;
+    transition:
+      max-height 0.45s ease-out,
+      opacity 0.45s ease-out,
+      transform 0.45s ease-out,
+      padding 0.45s ease-out;
   }
 
   .site-header.is-open nav {
-    display: flex;
+    max-height: 22rem;
+    padding: 0.4rem 0 0.6rem;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
   }
 
   nav a {
     padding: 0.7rem 0;
     border-top: 1px solid var(--line);
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+      opacity 0.4s ease-out,
+      transform 0.4s ease-out;
+    transition-delay: calc(var(--stagger, 0) * 65ms);
+  }
+
+  .site-header.is-open nav a {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: calc(60ms + var(--stagger, 0) * 65ms);
   }
 
   .nav-desktop-only {

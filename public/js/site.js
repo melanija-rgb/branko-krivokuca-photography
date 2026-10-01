@@ -24,15 +24,29 @@ if (pageGallery) {
 }
 
 if (menuToggle && header && siteNav) {
+  const menuLinks = () =>
+    [...siteNav.querySelectorAll("a")].filter((link) => getComputedStyle(link).display !== "none");
+
+  const staggerMenu = (opening) => {
+    const links = menuLinks();
+    const last = links.length - 1;
+    links.forEach((link, index) => {
+      link.style.setProperty("--stagger", String(opening ? index : last - index));
+    });
+  };
+
   menuToggle.addEventListener("click", () => {
-    const open = header.classList.toggle("is-open");
-    menuToggle.setAttribute("aria-expanded", String(open));
-    menuToggle.setAttribute("aria-label", t(open ? "closeMenu" : "openMenu"));
+    const willOpen = !header.classList.contains("is-open");
+    staggerMenu(willOpen);
+    header.classList.toggle("is-open");
+    menuToggle.setAttribute("aria-expanded", String(willOpen));
+    menuToggle.setAttribute("aria-label", t(willOpen ? "closeMenu" : "openMenu"));
   });
 
   siteNav.addEventListener("click", (event) => {
     const link = event.target.closest("a");
     if (!link) return;
+    staggerMenu(false);
     header.classList.remove("is-open");
     menuToggle.setAttribute("aria-expanded", "false");
     menuToggle.setAttribute("aria-label", t("openMenu"));
