@@ -704,9 +704,35 @@ button[type="submit"]:hover {
     text-shadow: 0 1px 16px rgba(0, 0, 0, 0.75);
   }
 
+  nav a {
+    position: relative;
+    transition: color 0.4s ease;
+  }
+
+  nav a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.32em;
+    height: 1px;
+    background: currentColor;
+    opacity: 0;
+    transform: scaleX(0.35);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  nav a:hover,
+  nav a:focus-visible,
   body.home nav a:hover,
   body.home nav a:focus-visible {
-    color: #fff;
+    color: var(--accent);
+  }
+
+  nav a:hover::after,
+  nav a:focus-visible::after {
+    opacity: 1;
+    transform: scaleX(1);
   }
 
   body.home .home-hero-image {
@@ -1002,5 +1028,44 @@ button[type="submit"]:hover {
   body.home .category-card-name {
     font-size: 0.82rem;
     padding: 0.45rem 0.4rem;
+  }
+}
+
+.to-top {
+  position: fixed;
+  right: 1.35rem;
+  bottom: 1.35rem;
+  z-index: 9;
+  width: 2.55rem;
+  height: 2.55rem;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  background: rgba(28, 28, 28, 0.9);
+  color: var(--ink);
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, background 0.3s ease;
+}
+
+.to-top.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.to-top:hover {
+  background: rgba(42, 42, 42, 0.96);
+  color: var(--accent);
+}
+
+@media (max-width: 800px) {
+  .to-top {
+    right: 1rem;
+    bottom: 1rem;
+    width: 2.4rem;
+    height: 2.4rem;
   }
 }

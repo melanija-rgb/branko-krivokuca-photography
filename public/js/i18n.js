@@ -46,6 +46,7 @@ const I18N = {
     thanksLede: "Branko will get back to you.",
     backToSite: "Back to the site",
     langGroup: "Language",
+    backToTop: "Back to top",
   },
   sr: {
     title: "Branko Krivokuca — Fotograf",
@@ -94,6 +95,7 @@ const I18N = {
     thanksLede: "Branko će vam se javiti.",
     backToSite: "Nazad na sajt",
     langGroup: "Jezik",
+    backToTop: "Na vrh",
   },
 };
 

@@ -172,6 +172,18 @@ function photoCard(photo) {
   `;
 }
 
+const toTop = document.querySelector(".to-top");
+if (toTop) {
+  const toggleToTop = () => {
+    toTop.classList.toggle("is-visible", window.scrollY > 280);
+  };
+  window.addEventListener("scroll", toggleToTop, { passive: true });
+  toggleToTop();
+  toTop.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+}
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
