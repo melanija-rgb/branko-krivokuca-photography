@@ -742,7 +742,7 @@ button[type="submit"]:hover {
   }
 
   body.home .home-hero-image {
-    filter: blur(3.5px) saturate(0.88) brightness(0.7);
+    filter: blur(2px) saturate(0.88) brightness(0.7);
   }
 
   body.home .home-hero::after {
