@@ -148,6 +148,20 @@ body.home main {
   pointer-events: none;
 }
 
+.site-credit {
+  position: absolute;
+  left: 4.5vw;
+  bottom: 0.8rem;
+  z-index: 2;
+  margin: 0;
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: rgba(239, 236, 230, 0.52);
+  pointer-events: none;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.55);
+}
+
 body.home .categories {
   position: relative;
   z-index: 1;
