@@ -604,6 +604,8 @@ h2 {
     height: auto;
     max-width: calc(100vw - 1.25rem);
     max-height: 85dvh;
+    object-fit: contain;
+    object-position: center;
   }
 }
 
@@ -1076,6 +1078,11 @@ button[type="submit"]:hover {
     margin: 0;
     overflow: hidden;
     touch-action: none;
+  }
+
+  body.gallery-view .gallery.gallery-orbit.is-focused {
+    overflow: visible;
+    perspective: none;
   }
 
   body.gallery-view .site-footer {
