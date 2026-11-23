@@ -1019,6 +1019,57 @@ button[type="submit"]:hover {
     overflow: hidden;
   }
 
+  html:has(body.gallery-view),
+  body.gallery-view {
+    height: 100dvh;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+  body.gallery-view {
+    display: flex;
+    flex-direction: column;
+  }
+
+  body.gallery-view .site-header,
+  body.gallery-view .site-footer {
+    flex-shrink: 0;
+  }
+
+  body.gallery-view main {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  body.gallery-view .gallery-page {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 0.85rem 0 0.35rem;
+  }
+
+  body.gallery-view .gallery-page .section-head {
+    margin-bottom: 0.55rem;
+    flex-shrink: 0;
+  }
+
+  body.gallery-view .gallery.gallery-orbit {
+    flex: 1 1 auto;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    margin: 0;
+    overflow: hidden;
+    touch-action: none;
+  }
+
+  body.gallery-view .site-footer {
+    padding: 0.35rem 5vw 0.85rem;
+  }
+
   .contact,
   .row {
     grid-template-columns: 1fr;
