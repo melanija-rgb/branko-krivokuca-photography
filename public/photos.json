@@ -1,54 +1,54 @@
 [
   {
-    "id": "landscape-milky-way",
+    "id": "landscape-milky-way-2",
     "title": "Milky Way",
     "category": "landscape",
     "src": "/images/landscape-milky-way.png"
   },
   {
-    "id": "landscape-stecak",
+    "id": "landscape-stecak-2",
     "title": "Stecak",
     "category": "landscape",
     "src": "/images/landscape-stecak.png"
   },
   {
-    "id": "landscape-lightning",
+    "id": "landscape-lightning-2",
     "title": "Lightning",
     "category": "landscape",
     "src": "/images/landscape-lightning.png"
   },
   {
-    "id": "landscape-snow",
+    "id": "landscape-snow-2",
     "title": "Snow ridge",
     "category": "landscape",
     "src": "/images/landscape-snow.png"
   },
   {
-    "id": "landscape-sunset",
+    "id": "landscape-sunset-2",
     "title": "Sunset",
     "category": "landscape",
     "src": "/images/landscape-sunset.png"
   },
   {
-    "id": "landscape-canyon",
+    "id": "landscape-canyon-2",
     "title": "Canyon",
     "category": "landscape",
     "src": "/images/landscape-canyon.png"
   },
   {
-    "id": "landscape-bridge",
+    "id": "landscape-bridge-2",
     "title": "Bridge",
     "category": "landscape",
     "src": "/images/landscape-bridge.png"
   },
   {
-    "id": "landscape-jajce",
+    "id": "landscape-jajce-2",
     "title": "Jajce",
     "category": "landscape",
     "src": "/images/landscape-jajce.png"
   },
   {
-    "id": "landscape-una",
+    "id": "landscape-una-2",
     "title": "Una",
     "category": "landscape",
     "src": "/images/landscape-una.png"
@@ -60,10 +60,10 @@
     "src": "/images/landscape-blagaj.jpg"
   },
   {
-    "id": "landscape-pyramids",
+    "id": "landscape-pyramids-2",
     "title": "Pyramids",
     "category": "landscape",
-    "src": "/images/landscape-pyramids.png"
+    "src": "/images/landscape-pyramids.jpg"
   },
   {
     "id": "landscape-meadow",
@@ -72,7 +72,7 @@
     "src": "/images/landscape-meadow.png"
   },
   {
-    "id": "landscape-flowers",
+    "id": "landscape-flowers-2",
     "title": "Flowers",
     "category": "landscape",
     "src": "/images/landscape-flowers.jpg"
@@ -96,7 +96,7 @@
     "src": "/images/landscape-deer.png"
   },
   {
-    "id": "landscape-moon-close",
+    "id": "landscape-moon-close-2",
     "title": "Moon close",
     "category": "landscape",
     "src": "/images/landscape-moon-close.png"
