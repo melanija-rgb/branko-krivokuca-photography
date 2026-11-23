@@ -859,6 +859,19 @@ button[type="submit"]:hover {
 }
 
 @media (min-width: 801px) {
+  .gallery.gallery-orbit button {
+    width: min(13.25rem, 32vw);
+  }
+
+  .orbit-focus {
+    max-width: min(86vw, 1400px);
+  }
+
+  .gallery.gallery-orbit .orbit-focus img {
+    max-width: min(86vw, 1400px);
+    max-height: min(88vh, 980px);
+  }
+
   body.home .site-header {
     align-items: center;
     padding: 1.45rem 4.5vw 1.25rem;
