@@ -94,7 +94,7 @@ document.querySelectorAll(".panel-dialog").forEach((dialog) => {
 if (lightbox && lightboxImage) {
   document.addEventListener("click", (event) => {
     const button = event.target.closest(".gallery button[data-src]");
-    if (!button) return;
+    if (!button || button.closest(".gallery-orbit")) return;
     lightboxImage.src = button.dataset.src;
     lightboxImage.alt = button.dataset.title || "";
     lightbox.showModal();
@@ -143,11 +143,15 @@ async function loadCategoryPage() {
     const photos = await loadPhotos();
     const items = photos.filter((photo) => photoCategory(photo) === id);
     if (!items.length) {
+      pageGallery.classList.remove("gallery-orbit");
       pageGallery.innerHTML = `<p class="gallery-empty" data-i18n-empty="${meta.emptyKey}">${t(meta.emptyKey)}</p>`;
       return;
     }
+    pageGallery.classList.add("gallery-orbit");
     pageGallery.innerHTML = items.map(photoCard).join("");
+    initOrbitGallery(pageGallery);
   } catch {
+    pageGallery.classList.remove("gallery-orbit");
     pageGallery.innerHTML = `<p class="gallery-empty" data-i18n-empty="galleryError">${t("galleryError")}</p>`;
   }
 }
@@ -178,12 +182,100 @@ function gallerySrc(src) {
 
 function photoCard(photo) {
   return `
-    <article>
-      <button type="button" data-src="${escapeAttr(gallerySrc(photo.src))}" data-title="${escapeAttr(photo.title)}">
+    <button type="button" class="orbit-item" data-src="${escapeAttr(gallerySrc(photo.src))}" data-title="${escapeAttr(photo.title)}">
+      <span class="orbit-item-inner">
         <img src="${escapeAttr(gallerySrc(photo.src))}" alt="" draggable="false" />
-      </button>
-    </article>
+      </span>
+    </button>
   `;
+}
+
+function initOrbitGallery(gallery) {
+  const items = [...gallery.querySelectorAll(".orbit-item")];
+  if (!items.length) return;
+
+  const focus = document.createElement("div");
+  focus.className = "orbit-focus";
+  focus.hidden = true;
+  const focusImage = document.createElement("img");
+  focusImage.alt = "";
+  focusImage.draggable = false;
+  focus.append(focusImage);
+  gallery.append(focus);
+
+  let rotation = 0;
+  let target = 0;
+  let frame = 0;
+
+  const layout = () => {
+    const count = items.length;
+    const radiusX = gallery.clientWidth * 0.36;
+    const radiusY = gallery.clientHeight * 0.26;
+    items.forEach((item, index) => {
+      const angle = (index / count) * Math.PI * 2 + rotation;
+      const x = Math.sin(angle) * radiusX;
+      const y = Math.cos(angle) * radiusY;
+      const depth = (Math.cos(angle) + 1) / 2;
+      const scale = 0.52 + depth * 0.38;
+      item.style.zIndex = String(Math.round(depth * 80));
+      item.style.opacity = String(0.42 + depth * 0.58);
+      item.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) scale(${scale})`;
+    });
+  };
+
+  const tick = () => {
+    rotation += (target - rotation) * 0.085;
+    layout();
+    frame = requestAnimationFrame(tick);
+  };
+
+  const onPointer = (event) => {
+    const x = event.clientX ?? event.touches?.[0]?.clientX;
+    if (typeof x !== "number") return;
+    target = (x / window.innerWidth - 0.5) * Math.PI * 1.65;
+  };
+
+  const openFocus = (button) => {
+    const next = button.dataset.src;
+    if (!next) return;
+    const wasOpen = !focus.hidden;
+    focusImage.src = next;
+    focusImage.alt = button.dataset.title || "";
+    focus.hidden = false;
+    gallery.classList.add("is-focused");
+    if (wasOpen) {
+      focusImage.style.animation = "none";
+      void focusImage.offsetWidth;
+      focusImage.style.animation = "";
+    }
+  };
+
+  const closeFocus = () => {
+    focus.hidden = true;
+    focusImage.removeAttribute("src");
+    gallery.classList.remove("is-focused");
+  };
+
+  gallery.addEventListener("click", (event) => {
+    const button = event.target.closest(".orbit-item");
+    if (button) {
+      event.preventDefault();
+      openFocus(button);
+      return;
+    }
+    if (event.target === focusImage) {
+      closeFocus();
+    }
+  });
+
+  window.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeFocus();
+  });
+
+  window.addEventListener("pointermove", onPointer, { passive: true });
+  window.addEventListener("touchmove", onPointer, { passive: true });
+  window.addEventListener("resize", layout);
+  frame = requestAnimationFrame(tick);
 }
 
 const toTop = document.querySelector(".to-top");
