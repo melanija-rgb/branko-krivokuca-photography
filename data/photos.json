@@ -96,6 +96,48 @@
     "src": "/images/landscape-deer.png"
   },
   {
+    "id": "wildlife-swans",
+    "title": "Swans",
+    "category": "wildlife",
+    "src": "/images/wildlife-swans.png"
+  },
+  {
+    "id": "wildlife-jay",
+    "title": "Jay",
+    "category": "wildlife",
+    "src": "/images/wildlife-jay.png"
+  },
+  {
+    "id": "wildlife-wagtail",
+    "title": "Wagtail",
+    "category": "wildlife",
+    "src": "/images/wildlife-wagtail.png"
+  },
+  {
+    "id": "wildlife-frog",
+    "title": "Frog",
+    "category": "wildlife",
+    "src": "/images/wildlife-frog.png"
+  },
+  {
+    "id": "wildlife-bear",
+    "title": "Bear",
+    "category": "wildlife",
+    "src": "/images/wildlife-bear.png"
+  },
+  {
+    "id": "wildlife-owl",
+    "title": "Owl",
+    "category": "wildlife",
+    "src": "/images/wildlife-owl.jpg"
+  },
+  {
+    "id": "wildlife-blackbird",
+    "title": "Blackbird",
+    "category": "wildlife",
+    "src": "/images/wildlife-blackbird.jpg"
+  },
+  {
     "id": "landscape-moon-close-2",
     "title": "Moon close",
     "category": "landscape",
