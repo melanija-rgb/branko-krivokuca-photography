@@ -449,16 +449,22 @@ h2 {
   -webkit-touch-callout: none;
 }
 
-.gallery[data-category="wildlife"] {
+.gallery[data-category="wildlife"],
+.gallery[data-category="landscape"],
+.gallery[data-category="people"] {
   align-items: stretch;
 }
 
-.gallery[data-category="wildlife"] button {
+.gallery[data-category="wildlife"] button,
+.gallery[data-category="landscape"] button,
+.gallery[data-category="people"] button {
   overflow: hidden;
   aspect-ratio: 4 / 3;
 }
 
-.gallery[data-category="wildlife"] img {
+.gallery[data-category="wildlife"] img,
+.gallery[data-category="landscape"] img,
+.gallery[data-category="people"] img {
   height: 100%;
   object-fit: cover;
   object-position: center;
