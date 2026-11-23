@@ -529,16 +529,20 @@ h2 {
   left: 50%;
   top: 50%;
   z-index: 80;
-  width: min(58vw, 760px);
+  width: auto;
+  max-width: min(58vw, 760px);
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
 
-.orbit-focus img {
+.gallery.gallery-orbit .orbit-focus img {
   display: block;
-  width: 100%;
+  width: auto;
+  height: auto;
+  max-width: 100%;
   max-height: min(70vh, 720px);
   object-fit: contain;
+  object-position: center;
   pointer-events: auto;
   cursor: zoom-out;
   filter: drop-shadow(0 28px 60px rgba(0, 0, 0, 0.62));
@@ -587,7 +591,7 @@ h2 {
   }
 
   .orbit-focus {
-    width: min(86vw, 520px);
+    max-width: min(86vw, 520px);
   }
 }
 
