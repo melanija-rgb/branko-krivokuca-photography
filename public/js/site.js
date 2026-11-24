@@ -204,13 +204,13 @@ function initOrbitGallery(gallery) {
   gallery.append(focus);
 
   let rotation = 0;
-  let target = 0;
+  let spin = 0.0032;
   let frame = 0;
 
   const layout = () => {
     const count = items.length;
-    const radiusX = gallery.clientWidth * 0.36;
-    const radiusY = gallery.clientHeight * 0.26;
+    const radiusX = gallery.clientWidth * 0.48;
+    const radiusY = gallery.clientHeight * 0.28;
     items.forEach((item, index) => {
       const angle = (index / count) * Math.PI * 2 + rotation;
       const x = Math.sin(angle) * radiusX;
@@ -224,7 +224,7 @@ function initOrbitGallery(gallery) {
   };
 
   const tick = () => {
-    rotation += (target - rotation) * 0.028;
+    rotation -= spin;
     layout();
     frame = requestAnimationFrame(tick);
   };
@@ -232,7 +232,7 @@ function initOrbitGallery(gallery) {
   const onPointer = (event) => {
     const x = event.clientX ?? event.touches?.[0]?.clientX;
     if (typeof x !== "number") return;
-    target = (x / window.innerWidth - 0.5) * Math.PI * 0.95;
+    spin = 0.0024 + (x / window.innerWidth) * 0.0028;
   };
 
   const openFocus = (button) => {

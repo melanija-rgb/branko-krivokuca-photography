@@ -587,23 +587,27 @@ h2 {
   }
 
   .gallery.gallery-orbit button {
-    width: min(7.6rem, 42vw);
+    width: min(15.2rem, 84vw);
   }
 
   .orbit-focus {
     position: fixed;
     left: 50%;
     top: 50%;
-    width: auto;
-    max-width: calc(100vw - 1.25rem);
+    width: 92vw;
+    max-width: 92vw;
+    height: 88dvh;
+    max-height: 88dvh;
     transform: translate(-50%, -50%);
   }
 
   .gallery.gallery-orbit .orbit-focus img {
-    width: auto;
-    height: auto;
-    max-width: calc(100vw - 1.25rem);
-    max-height: 85dvh;
+    width: 100%;
+    height: 100%;
+    max-width: 92vw;
+    max-height: 88dvh;
+    min-width: 80vw;
+    min-height: 80dvh;
     object-fit: contain;
     object-position: center;
   }
@@ -859,8 +863,14 @@ button[type="submit"]:hover {
 }
 
 @media (min-width: 801px) {
+  .gallery.gallery-orbit {
+    width: calc(100% + 12vw);
+    margin-left: -6vw;
+    height: min(84vh, 900px);
+  }
+
   .gallery.gallery-orbit button {
-    width: min(13.25rem, 32vw);
+    width: min(26.5rem, 64vw);
   }
 
   .orbit-focus {
@@ -1089,7 +1099,7 @@ button[type="submit"]:hover {
     height: auto;
     min-height: 0;
     margin: 0;
-    overflow: hidden;
+    overflow: visible;
     touch-action: none;
   }
 
