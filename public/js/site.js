@@ -209,8 +209,9 @@ function initOrbitGallery(gallery) {
 
   const layout = () => {
     const count = items.length;
-    const radiusX = gallery.clientWidth * 0.48;
-    const radiusY = gallery.clientHeight * 0.28;
+    const desktop = window.matchMedia("(min-width: 801px)").matches;
+    const radiusX = gallery.clientWidth * (desktop ? 0.4 : 0.48);
+    const radiusY = gallery.clientHeight * (desktop ? 0.24 : 0.28);
     items.forEach((item, index) => {
       const angle = (index / count) * Math.PI * 2 + rotation;
       const x = Math.sin(angle) * radiusX;

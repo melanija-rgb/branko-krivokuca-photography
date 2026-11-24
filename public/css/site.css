@@ -594,20 +594,20 @@ h2 {
     position: fixed;
     left: 50%;
     top: 50%;
-    width: 92vw;
-    max-width: 92vw;
-    height: 88dvh;
-    max-height: 88dvh;
+    width: 98vw;
+    max-width: 98vw;
+    height: 94dvh;
+    max-height: 94dvh;
     transform: translate(-50%, -50%);
   }
 
   .gallery.gallery-orbit .orbit-focus img {
     width: 100%;
     height: 100%;
-    max-width: 92vw;
-    max-height: 88dvh;
-    min-width: 80vw;
-    min-height: 80dvh;
+    max-width: 98vw;
+    max-height: 94dvh;
+    min-width: 92vw;
+    min-height: 88dvh;
     object-fit: contain;
     object-position: center;
   }
@@ -866,20 +866,37 @@ button[type="submit"]:hover {
   .gallery.gallery-orbit {
     width: calc(100% + 12vw);
     margin-left: -6vw;
-    height: min(84vh, 900px);
+    height: min(78vh, 820px);
+    overflow: hidden;
+  }
+
+  .gallery.gallery-orbit.is-focused {
+    overflow: visible;
+    perspective: none;
   }
 
   .gallery.gallery-orbit button {
-    width: min(26.5rem, 64vw);
+    width: min(22rem, 48vw);
   }
 
   .orbit-focus {
-    max-width: min(86vw, 1400px);
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    width: 96vw;
+    max-width: 96vw;
+    height: 92vh;
+    max-height: 92vh;
+    transform: translate(-50%, -50%);
   }
 
   .gallery.gallery-orbit .orbit-focus img {
-    max-width: min(86vw, 1400px);
-    max-height: min(88vh, 980px);
+    width: 100%;
+    height: 100%;
+    max-width: 96vw;
+    max-height: 92vh;
+    object-fit: contain;
+    object-position: center;
   }
 
   body.home .site-header {
