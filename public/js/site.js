@@ -204,7 +204,7 @@ function initOrbitGallery(gallery) {
   gallery.append(focus);
 
   let rotation = 0;
-  let spin = 0.0032;
+  let spin = 0.0018;
   let frame = 0;
 
   const layout = () => {
@@ -233,7 +233,7 @@ function initOrbitGallery(gallery) {
   const onPointer = (event) => {
     const x = event.clientX ?? event.touches?.[0]?.clientX;
     if (typeof x !== "number") return;
-    spin = 0.0024 + (x / window.innerWidth) * 0.0028;
+    spin = 0.0012 + (x / window.innerWidth) * 0.0014;
   };
 
   const openFocus = (button) => {
